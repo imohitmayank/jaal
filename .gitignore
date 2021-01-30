@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# vscode
+.vscode/
+
 # Distribution / packaging
 .Python
 build/
@@ -109,6 +112,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+jaalvenv/
 
 # Spyder project settings
 .spyderproject

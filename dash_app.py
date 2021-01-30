@@ -11,6 +11,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from generic_layout import *
+from callbacks import *
 from dash.dependencies import Input, Output, State
 
 # create app
@@ -20,7 +21,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 df = pd.read_csv("data/book1.csv")
 df = df.loc[df['weight']>10, :]
 node_list = list(set(df['Source'].unique().tolist() + df['Target'].unique().tolist()))
-nodes = [{'id': node_name, 'label': node_name, 'shape': 'dot', 'size': 7} for i, node_name in enumerate(node_list)]
+nodes = [{'id': node_name, 'label': node_name, 'shape': 'dot', 'size': 7, 'opacity': 10} for i, node_name in enumerate(node_list)]
 # create edges from df
 edges = []
 for row in df.to_dict(orient='records'):
@@ -58,16 +59,11 @@ app.layout = html.Div([
             #                     {'label': 'Green', 'value': '#00ff00'},
             #                     {'label': 'Blue' , 'value': '#0000ff'} ],
             #             value='Red')             ,
-            # dcc.RadioItems(id = 'color111',
-            #             options=[{'label': 'Red'  , 'value': '#ff0000'},
-            #                     {'label': 'Green', 'value': '#00ff00'},
-            #                     {'label': 'Blue' , 'value': '#0000ff'} ],
-            #             value='Red')             
         ]
         ,width=3),
         
         dbc.Col(
-            visdcc.Network(id = 'net', 
+            visdcc.Network(id = 'graph', 
                         data = {'nodes': nodes, 'edges': edges},
                         options = dict(height= '600px', width= '100%'))
         ,width=9)]),
@@ -79,6 +75,24 @@ app.layout = html.Div([
 #     [Input('color', 'value')])
 # def myfun(x):
 #     return {'nodes':{'color': x}}
+
+@app.callback(
+    Output('graph', 'data'),
+    [Input('search_graph', 'value')],
+    state=State('graph', 'data')
+)
+def search_option_callback(search_text, graph_data):
+    # highlight the nodes which match the search text
+    nodes = graph_data['nodes']
+    for node in nodes:
+        if search_text not in node['label'].lower():
+            node['color'] = '#f4f8fe'
+            # node['hidden'] = True
+        else:
+            node['color'] = '#97C2FC'
+            # node['hidden'] = False
+    graph_data['nodes'] = nodes
+    return graph_data
 
 # define main calling
 if __name__ == '__main__':

@@ -10,11 +10,11 @@ import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from generic_layout import create_row
+from generic_layout import *
 from dash.dependencies import Input, Output, State
 
 # create app
-app = dash.Dash()
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # load data
 df = pd.read_csv("data/book1.csv")
@@ -44,30 +44,41 @@ def create_card(id, title, value, description=""):
         )
     )
 
+
+
 # define layout
 app.layout = html.Div([
-    # Title
-    create_row(html.H2(children="Jaal")),
-    create_row(
-        visdcc.Network(id = 'net', 
-                    data = {'nodes': nodes, 'edges': edges},
-                    options = dict(height= '600px', width= '100%'))
-    ),
-    create_row(
-        dcc.RadioItems(id = 'color',
-                    options=[{'label': 'Red'  , 'value': '#ff0000'},
-                            {'label': 'Green', 'value': '#00ff00'},
-                            {'label': 'Blue' , 'value': '#0000ff'} ],
-                    value='Red')             
-    )
+    create_row(html.H2(children="Jaal")), # Title
+    # divide cols for rest components
+    dbc.Row([
+        dbc.Col([
+            dbc.Form([search_form, filter_node_form, filter_edge_form, color_node, size_node, color_edge, size_edge]), # setting panel
+            # dcc.RadioItems(id = 'color',
+            #             options=[{'label': 'Red'  , 'value': '#ff0000'},
+            #                     {'label': 'Green', 'value': '#00ff00'},
+            #                     {'label': 'Blue' , 'value': '#0000ff'} ],
+            #             value='Red')             ,
+            # dcc.RadioItems(id = 'color111',
+            #             options=[{'label': 'Red'  , 'value': '#ff0000'},
+            #                     {'label': 'Green', 'value': '#00ff00'},
+            #                     {'label': 'Blue' , 'value': '#0000ff'} ],
+            #             value='Red')             
+        ]
+        ,width=3),
+        
+        dbc.Col(
+            visdcc.Network(id = 'net', 
+                        data = {'nodes': nodes, 'edges': edges},
+                        options = dict(height= '600px', width= '100%'))
+        ,width=9)]),
 ])
 
 # define callback
-@app.callback(
-    Output('net', 'options'),
-    [Input('color', 'value')])
-def myfun(x):
-    return {'nodes':{'color': x}}
+# @app.callback(
+#     Output('net', 'options'),
+#     [Input('color', 'value')])
+# def myfun(x):
+#     return {'nodes':{'color': x}}
 
 # define main calling
 if __name__ == '__main__':

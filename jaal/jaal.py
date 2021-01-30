@@ -7,10 +7,10 @@ Main class for Jaal visualization
 import dash
 import visdcc
 import pandas as pd
+from layout import get_app_layout
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from layout import get_app_layout
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 from datasets.parse_dataframe import parse_dataframe
@@ -51,10 +51,11 @@ class Jaal:
             Output('graph', 'data'),
             [Input('search_graph', 'value'),
             Input('filter_nodes', 'value'),
-            Input('filter_edges', 'value')],
+            Input('filter_edges', 'value'),
+            Input('color_nodes', 'value')],
             state=State('graph', 'data')
         )
-        def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, graph_data):
+        def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, color_nodes_value, graph_data):
             # fetch the id of option which triggered
             ctx = dash.callback_context
             if not ctx.triggered:
@@ -107,6 +108,9 @@ class Jaal:
                         # edges_list = edges_df['id'].tolist()
                         graph_data = self.data
                         print("wrong edge filter query!!")
+                #
+                elif input_id == 'color_nodes':
+                    print("color_nodes with text", color_nodes_value)
             # finally return the modified data
             return graph_data
         # run the server

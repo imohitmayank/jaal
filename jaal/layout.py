@@ -5,6 +5,7 @@ Layout code for the application
 """
 # Import 
 #---------
+import os
 import visdcc
 import base64
 import pandas as pd
@@ -164,7 +165,9 @@ def get_app_layout(graph_data):
     except:
         pass
     # Step 3: create and return the layout
-    image_filename = "jaal/assest/logo.png"
+    # resolve path
+    this_dir, _ = os.path.split(__file__)
+    image_filename = os.path.join(this_dir, "assest", "logo.png")
     encoded_image = base64.b64encode(open(image_filename, 'rb').read())
     return html.Div([
             # create_row(html.H2(children="Jaal")), # Title

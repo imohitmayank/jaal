@@ -12,8 +12,8 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
-from datasets.parse_dataframe import parse_dataframe
-from layout import get_app_layout, get_distinct_colors, DEFAULT_COLOR
+from .datasets.parse_dataframe import parse_dataframe
+from .layout import get_app_layout, get_distinct_colors, DEFAULT_COLOR
 
 # class
 class Jaal:

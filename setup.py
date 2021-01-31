@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="jaal",
-    version="0.0.1",
+    version="0.0.2",
     author="Mohit Mayank",
     author_email="mohitmayank1@gmail.com",
     description="jaal - your interactive network visualizer dashboard",
@@ -19,7 +19,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    package_data={'': ['datasets/*', 'assest/*', 'datasets/got/*']},
+    package_data={'': ['datasets/*', 'assest/logo.png', 'datasets/got/*']},
     include_package_data=True,
     install_requires=['dash', 'visdcc', 'pandas', 'dash_core_components', 'dash_html_components', 'dash_bootstrap_components'],
     # package_dir={'':'jaal'}

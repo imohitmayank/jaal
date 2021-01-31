@@ -26,6 +26,10 @@ pip install jaal
 
 And you are done :)
 
+Note, it's recommended to create a virtual enivornment before installing. This can be easily done using `python -m venv myenv` and then to activate the env we need,
+1. (Windows) `.\\myvenv\\Scripts\\activate.bat`
+2. (Linux) `source myvenv/bin/activate`
+
 ## Getting started
 
 After installing Jaal, we need to fetch the data and call `plot` function in Jaal. This can be shown by playing with an included Game of Thrones dataset, as follows,

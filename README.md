@@ -3,11 +3,10 @@
 *Your interactive network visualizing dashboard*
 
 ## What is Jaal
------------------
+
 Jaal is a python based interactive network visualizing tool built using Dash and Visdcc. Along with the basic features, Jaal also provides multiple option to play with the network data such as searching graph, filtering and even coloring nodes and edges in the graph. And all of this within 2 lines of codes :)
 
 ## Requirements
-------------------
 
 Jaal requires following python packages, 
 1. Dash
@@ -18,7 +17,6 @@ Jaal requires following python packages,
 4. pandas
 
 ## Install
------------
 
 Installing Jaal is super easy, just do the following,
 
@@ -29,7 +27,6 @@ pip install jaal
 And you are done :)
 
 ## Getting started
--------------------
 
 After installing Jaal, we need to fetch the data and call `plot` function in Jaal. This can be shown by playing with an included Game of Thrones dataset, as follows,
 
@@ -54,7 +51,6 @@ After running the plot, the console will prompt the default localhost address (`
 <img src="jaal/assest/dashboard.png" alt="dashboard"/>
 
 ## Features
--------------
 
 At present, the dashboard consist of following sections,
 1. **Setting panel:** here we can play with the graph data, i further contain following sections, 
@@ -64,7 +60,6 @@ At present, the dashboard consist of following sections,
 2. **Graph:** the network graph in all its glory :)
 
 ## Examples
----------------
 
 ### 1. Searching
 <img src="jaal/assest/jaal_search.gif" alt="dashboard"/>
@@ -76,22 +71,18 @@ At present, the dashboard consist of following sections,
 <img src="jaal/assest/jaal_color.gif" alt="dashboard"/>
 
 ## Issue tracker
---------------------
 
 Please report any bug or feature idea using Jaal issue tracker: https://github.com/imohitmayank/jaal/issues
 
 ## Collaboration
------------
 
 Any type of collaboration is appreciated. It could be  testing, development, documentation and other tasks that is useful to the project. Feel free to connect with me regarding this.
 
 ## Contact
------------
 
-You can connect with me on [LinkedIn](https://www.linkedin.com/in/imohitmayank/) or [mail me](mohitmayank1@gmail.com).
+You can connect with me on [LinkedIn](https://www.linkedin.com/in/imohitmayank/) or mail me at mohitmayank1@gmail.com.
 
 ## License
--------
 
 Jaal is licensed under the terms of the MIT License (see the file
 LICENSE).

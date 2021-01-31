@@ -32,8 +32,8 @@ After installing Jaal, we need to fetch the data and call `plot` function in Jaa
 
 ```python
 # import
-from jaal.jaal import Jaal
-from jaal.datasets.load_got import load_got
+from jaal import Jaal
+from jaal.datasets import load_got
 # load the data
 edge_df, node_df = load_got()
 # init Jaal and run server

@@ -6,6 +6,7 @@ Layout code for the application
 # Import 
 #---------
 import visdcc
+import base64
 import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
@@ -163,8 +164,11 @@ def get_app_layout(graph_data):
     except:
         pass
     # Step 3: create and return the layout
+    image_filename = "jaal/assest/logo.png"
+    encoded_image = base64.b64encode(open(image_filename, 'rb').read())
     return html.Div([
-            create_row(html.H2(children="Jaal")), # Title
+            # create_row(html.H2(children="Jaal")), # Title
+            create_row(html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), width="80px")),
             create_row([
                 dbc.Col([
                     # setting panel

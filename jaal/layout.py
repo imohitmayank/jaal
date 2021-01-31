@@ -78,29 +78,37 @@ def create_row(children, style=""):
 
 search_form = dbc.FormGroup(
     [
-        dbc.Label("Search", html_for="search_graph"),
+        # dbc.Label("Search", html_for="search_graph"),
         dbc.Input(type="search", id="search_graph", placeholder="Search node in graph..."),
         dbc.FormText(
-            "Find the node you are looking for.",
+            "Highlight the node you are looking for.",
             color="secondary",
         ),
     ]
 )
 
 filter_node_form = dbc.FormGroup([
-    dbc.Label("Filter nodes", html_for="filter_nodes"),
+    # dbc.Label("Filter nodes", html_for="filter_nodes"),
     dbc.Textarea(id="filter_nodes", placeholder="Enter filter node query here..."),
     dbc.FormText(
-        "Filter on nodes properties by using Pandas Query syntax",
+        html.P([
+            "Filter on nodes proprties by using ",
+            html.A("Pandas Query syntax", 
+            href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html"),
+        ]),
         color="secondary",
     ),
 ])
 
 filter_edge_form = dbc.FormGroup([
-    dbc.Label("Filter edges", html_for="filter_edges"),
+    # dbc.Label("Filter edges", html_for="filter_edges"),
     dbc.Textarea(id="filter_edges", placeholder="Enter filter edge query here..."),
     dbc.FormText(
-        "Filter on edge proprties by using Pandas Query syntax",
+        html.P([
+            "Filter on edges proprties by using ",
+            html.A("Pandas Query syntax", 
+            href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html"),
+        ]),
         color="secondary",
     ),
 ])
@@ -157,32 +165,40 @@ def get_app_layout(graph_data):
     # Step 3: create and return the layout
     return html.Div([
             create_row(html.H2(children="Jaal")), # Title
-            dbc.Row([
+            create_row([
                 dbc.Col([
                     # setting panel
-                    dbc.Form([search_form, 
-                             filter_node_form, 
-                             filter_edge_form, 
-                             get_select_form_layout(
-                                 id='color_nodes',
-                                 options=[{'label': opt, 'value': opt} for opt in cat_node_features],
-                                 label='Color nodes by',
-                                 description='Select the categorical node property to color nodes by'
-                             ), 
-                             get_select_form_layout(
-                                 id='color_edges',
-                                 options=[{'label': opt, 'value': opt} for opt in cat_edge_features],
-                                 label='Color edges by',
-                                 description='Select the categorical edges property to color edges by'
-                             ), 
-                             ]), 
-                ]
-                ,width=3),
-                
+                    dbc.Form([
+                        # html.H5("Setting Panel"),
+                        # html.Hr(className="my-2"),
+                        html.H6("Search"),
+                        html.Hr(className="my-2"),
+                        search_form, 
+                        html.H6("Filter"),
+                        html.Hr(className="my-2"),
+                        filter_node_form, 
+                        filter_edge_form,
+                        html.H6("Color"),
+                        html.Hr(className="my-2"), 
+                        get_select_form_layout(
+                            id='color_nodes',
+                            options=[{'label': opt, 'value': opt} for opt in cat_node_features],
+                            label='Color nodes by',
+                            description='Select the categorical node property to color nodes by'
+                        ), 
+                        get_select_form_layout(
+                            id='color_edges',
+                            options=[{'label': opt, 'value': opt} for opt in cat_edge_features],
+                            label='Color edges by',
+                            description='Select the categorical edge property to color edges by'
+                        ), 
+                    ], className="card", style={'padding': '5px', 'background': '#e5e5e5'}), 
+                ],width=3, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+                # graph 
                 dbc.Col(
                     visdcc.Network(id = 'graph', 
                                 data = graph_data,
-                                options = dict(height= '600px', width= '100%'))
+                                options = dict(height= '600px', width= '100%', interaction={'hover': True}))
                 ,width=9)]),
             # stats cards
             # dbc.Row([

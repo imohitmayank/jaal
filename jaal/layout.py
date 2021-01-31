@@ -97,67 +97,6 @@ filter_edge_form = dbc.FormGroup([
     ),
 ])
 
-# color node option
-# color_node = dbc.FormGroup([
-#                 dbc.InputGroup([
-#                     dbc.InputGroupAddon("Color node by", addon_type="append"),
-#                     dbc.Select(
-#                         id="color_nodes",
-#                         options=[
-#                             {"label": "Option 1", "value": 1},
-#                             {"label": "Option 2", "value": 2},
-#                         ]
-#                     ),]),
-#                 dbc.FormText(
-#                 "Select the categorical node property to color nodes by",
-#                 color="secondary",
-#             ),])
-
-# size node option
-# size_node = dbc.FormGroup([
-#                 dbc.InputGroup([
-#                     dbc.InputGroupAddon("Size node by", addon_type="append"),
-#                     dbc.Select(
-#                         options=[
-#                             {"label": "Option 1", "value": 1},
-#                             {"label": "Option 2", "value": 2},
-#                         ]
-#                     ),]),
-#                 dbc.FormText(
-#                 "Select the numerical node property to size nodes by",
-#                 color="secondary",
-#             ),])
-
-# color edge option
-# color_edge = dbc.FormGroup([
-#                 dbc.InputGroup([
-#                     dbc.InputGroupAddon("Color edge by", addon_type="append"),
-#                     dbc.Select(
-#                         options=[
-#                             {"label": "Option 1", "value": 1},
-#                             {"label": "Option 2", "value": 2},
-#                         ]
-#                     ),]),
-#                 dbc.FormText(
-#                 "Select the categorical edge property to color edge by",
-#                 color="secondary",
-#             ),])
-
-# size edge option
-# size_edge = dbc.FormGroup([
-#                 dbc.InputGroup([
-#                     dbc.InputGroupAddon("Size edge by", addon_type="append"),
-#                     dbc.Select(
-#                         options=[
-#                             {"label": "Option 1", "value": 1},
-#                             {"label": "Option 2", "value": 2},
-#                         ]
-#                     ),]),
-#                 dbc.FormText(
-#                 "Select the numerical edge property to size edge by",
-#                 color="secondary",
-#             ),])
-
 def get_select_form_layout(id, options, label, description):
     """Creates a select (dropdown) form with provides details
 
@@ -194,7 +133,7 @@ def get_app_layout(graph_data):
     except:
         pass
     # find categorical features of edges
-    edge_df = pd.DataFrame(graph_data['edges'])
+    edge_df = pd.DataFrame(graph_data['edges']).drop(columns=['color'])
     cat_edge_features = ['None'] + edge_df.columns[(edge_df.dtypes == 'object') & (edge_df.apply(pd.Series.nunique) < 21)].tolist()
     try:
         cat_edge_features.remove('from')
@@ -221,7 +160,7 @@ def get_app_layout(graph_data):
                                  id='color_edges',
                                  options=[{'label': opt, 'value': opt} for opt in cat_edge_features],
                                  label='Color edges by',
-                                 description='Select the categorical edges property to color nodes by'
+                                 description='Select the categorical edges property to color edges by'
                              ), 
                              ]), 
                 ]

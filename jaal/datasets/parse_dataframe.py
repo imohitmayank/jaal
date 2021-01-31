@@ -3,7 +3,6 @@ Author: Mohit Mayank
 
 Parse network data from dataframe format into visdcc format 
 """
-
 def parse_dataframe(edge_df, node_df=None):
     """Parse the network dataframe into visdcc format
 
@@ -35,13 +34,6 @@ def parse_dataframe(edge_df, node_df=None):
     # create edges from df
     edges = []
     for row in edge_df.to_dict(orient='records'):
-        # source, target = row['Source'], row['Target']
-        edges.append({**row, **{'id': row['from'] + "__" + row['to']}})
-        # edges.append({
-        #     'id': source + "__" + target,
-        #     'from': source,
-        #     'to': target,
-        #     'width': 2,
-        # })
+        edges.append({**row, **{'id': row['from'] + "__" + row['to'], 'color': {'color': '#97C2FC'}}})
     # return
     return {'nodes': nodes, 'edges': edges}

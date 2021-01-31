@@ -52,10 +52,11 @@ class Jaal:
             [Input('search_graph', 'value'),
             Input('filter_nodes', 'value'),
             Input('filter_edges', 'value'),
-            Input('color_nodes', 'value')],
+            Input('color_nodes', 'value'),
+            Input('color_edges', 'value')],
             state=State('graph', 'data')
         )
-        def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, color_nodes_value, graph_data):
+        def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, color_nodes_value, color_edges_value, graph_data):
             # fetch the id of option which triggered
             ctx = dash.callback_context
             if not ctx.triggered:
@@ -108,7 +109,7 @@ class Jaal:
                         # edges_list = edges_df['id'].tolist()
                         graph_data = self.data
                         print("wrong edge filter query!!")
-                # If color option is selected
+                # If color node text is provided
                 if input_id == 'color_nodes':
                     # color option is None, revert back all changes
                     if color_nodes_value == 'None':
@@ -127,6 +128,26 @@ class Jaal:
                     filtered_nodes = [x['id'] for x in self.filtered_data['nodes']]
                     # filtered_edges = [x['id'] for x in self.filtered_data['edges']]
                     self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
+                    graph_data = self.filtered_data
+                # If color edge text is provided
+                if input_id == 'color_edges':
+                    # color option is None, revert back all changes
+                    if color_edges_value == 'None':
+                        # revert to default color
+                        for edge in self.data['edges']:
+                            edge['color']['color'] = DEFAULT_COLOR
+                    else:
+                        print("inside color edge", color_edges_value)
+                        unique_values = pd.DataFrame(self.data['edges'])[color_edges_value].unique()
+                        colors = get_distinct_colors(len(unique_values))
+                        value_color_mapping = {x:y for x, y in zip(unique_values, colors)}
+                        for edge in self.data['edges']:
+                            edge['color']['color'] = value_color_mapping[edge[color_edges_value]]
+                        # import pdb; pdb.set_trace()
+                    # filter the data currently shown
+                    filtered_edges = [x['id'] for x in self.filtered_data['edges']]
+                    # filtered_edges = [x['id'] for x in self.filtered_data['edges']]
+                    self.filtered_data['edges'] = [x for x in self.data['edges'] if x['id'] in filtered_edges]
                     graph_data = self.filtered_data
             # finally return the modified data
             return graph_data

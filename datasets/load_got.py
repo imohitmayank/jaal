@@ -20,7 +20,7 @@ def load_got(filter_conections_threshold=10):
         keep the connections in GoT dataset with weights greater than this threshold 
     """
     # load the edge and node data
-    edge_df = pd.read_csv("jaal/datasets/got/got_edge_df.csv")
-    node_df = pd.read_csv("jaal/datasets/got/got_node_df.csv")
+    edge_df = pd.read_csv("datasets/got/got_edge_df.csv")
+    node_df = pd.read_csv("datasets/got/got_node_df.csv")
     # return 
     return edge_df, node_df

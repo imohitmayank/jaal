@@ -169,12 +169,3 @@ class Jaal:
             return graph_data
         # run the server
         app.run_server(debug=debug)
-
-# Testing main call
-if __name__ == "__main__":
-    # import
-    from datasets.load_got import load_got
-    # load the data
-    edge_df, node_df = load_got()
-    # init Jaal and run server
-    Jaal(edge_df, node_df).plot(debug=True)

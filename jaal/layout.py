@@ -1,7 +1,7 @@
 """
 Author: Mohit Mayank
 
-Layout of the application
+Layout code for the application
 """
 # Import 
 #---------
@@ -42,24 +42,32 @@ KELLY_COLORS_HEX = [
     "#232C16", # Dark Olive Green
     ]
 
+# Code
+#---------
 def get_distinct_colors(n):
+    """Return distict colors, currently atmost 20
+
+    Parameters
+    -----------
+    n: int
+        the distinct colors required
+    """
     if n <= 20:
         return KELLY_COLORS_HEX[:n]
 
-# Code
-#---------
-def create_card(id, title, value, description=""):
+def create_card(id, value, description):
+    """Creates card for high level stats
+
+    Parameters
+    ---------------
+    """
     return dbc.Card(
         dbc.CardBody(
             [
-                html.H4(title),
-                html.P(id=id, children=value),
-                html.H6(description)
-            ]
-        )
-    )
+                html.H4(id=id, children=value, className='card-title'),
+                html.P(children=description),
+            ]))
 
-# list of common styles of row alignment
 def fetch_row_style(style=""):
     return {'display': 'flex', 'flex-direction': 'row', 'justify-content': 'center', 'align-items': 'center'}
 
@@ -122,26 +130,31 @@ def get_select_form_layout(id, options, label, description):
 
 def get_app_layout(graph_data):
     """Create and return the layout of the app
+
+    Parameters
+    --------------
+    graph_data: dict{nodes, edges}
+        network data in format of visdcc
     """
-    # find categorical features of nodes
+    # Step 1: find categorical features of nodes
     node_df = pd.DataFrame(graph_data['nodes'])
-    cat_node_features = ['None'] + node_df.columns[(node_df.dtypes == 'object')  & (node_df.apply(pd.Series.nunique) < 21)].tolist()
-    try:
+    cat_node_features = ['None'] + node_df.columns[(node_df.dtypes == 'object') & (node_df.apply(pd.Series.nunique) <= 20)].tolist()
+    try: # remove irrelevant cols
         cat_node_features.remove('shape')
         cat_node_features.remove('label')
         cat_node_features.remove('id')
     except:
         pass
-    # find categorical features of edges
+    # Step 2: find categorical features of edges
     edge_df = pd.DataFrame(graph_data['edges']).drop(columns=['color'])
-    cat_edge_features = ['None'] + edge_df.columns[(edge_df.dtypes == 'object') & (edge_df.apply(pd.Series.nunique) < 21)].tolist()
-    try:
+    cat_edge_features = ['None'] + edge_df.columns[(edge_df.dtypes == 'object') & (edge_df.apply(pd.Series.nunique) <= 20)].tolist()
+    try: # remove irrelevant cols
         cat_edge_features.remove('from')
         cat_edge_features.remove('to')
         cat_edge_features.remove('id')
     except:
         pass
-    # return the layout
+    # Step 3: create and return the layout
     return html.Div([
             create_row(html.H2(children="Jaal")), # Title
             dbc.Row([
@@ -171,5 +184,10 @@ def get_app_layout(graph_data):
                                 data = graph_data,
                                 options = dict(height= '600px', width= '100%'))
                 ,width=9)]),
+            # stats cards
+            # dbc.Row([
+            #     dbc.Col(create_card(id="nodes_count", value="NA", description='Nodes'),width={'offset':3}),
+            #     dbc.Col(create_card(id="edges_count", value="NA", description='Edges'),width={'offset':6})
+            # ])
         ])
     

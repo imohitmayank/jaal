@@ -1,7 +1,7 @@
 """
 Author: Mohit Mayank
 
-Main class for Jaal visualization
+Main class for Jaal network visualization dashboard
 """
 # import
 import dash
@@ -17,7 +17,7 @@ from layout import get_app_layout, get_distinct_colors, DEFAULT_COLOR
 
 # class
 class Jaal:
-    """
+    """The main visualization class
     """
     def __init__(self, edge_df, node_df=None):
         """
@@ -33,6 +33,90 @@ class Jaal:
         self.data = parse_dataframe(edge_df, node_df)
         self.filtered_data = self.data.copy()
         print("Done")
+
+    def _callback_search_graph(self, graph_data, search_text):
+        """Highlight the nodes which match the search text
+        """
+        nodes = graph_data['nodes']
+        for node in nodes:
+            if search_text not in node['label'].lower():
+                node['color'] = '#f4f8fe'
+            else:
+                node['color'] = DEFAULT_COLOR
+        graph_data['nodes'] = nodes
+        return graph_data
+
+    def _callback_filter_nodes(self, graph_data, filter_nodes_text):
+        """
+        """
+        self.filtered_data = self.data.copy()
+        node_df = pd.DataFrame(self.filtered_data['nodes'])
+        try:
+            node_list = node_df.query(filter_nodes_text)['id'].tolist()
+            nodes = []
+            for node in self.filtered_data['nodes']:
+                if node['id'] in node_list:
+                    nodes.append(node)
+            self.filtered_data['nodes'] = nodes
+            graph_data = self.filtered_data
+        except: 
+            graph_data = self.data
+            print("wrong node filter query!!") 
+        return graph_data
+    
+    def _callback_filter_edges(self, graph_data, filter_edges_text):
+        self.filtered_data = self.data.copy()
+        edges_df = pd.DataFrame(self.filtered_data['edges'])
+        try:
+            edges_list = edges_df.query(filter_edges_text)['id'].tolist()
+            edges = []
+            for edge in self.filtered_data['edges']:
+                if edge['id'] in edges_list:
+                    edges.append(edge)
+            self.filtered_data['edges'] = edges
+            graph_data = self.filtered_data
+        except:
+            graph_data = self.data
+            print("wrong edge filter query!!")
+        return graph_data
+
+    def _callback_color_nodes(self, graph_data, color_nodes_value):
+        # color option is None, revert back all changes
+        if color_nodes_value == 'None':
+            # revert to default color
+            for node in self.data['nodes']:
+                node['color'] = DEFAULT_COLOR
+        else:
+            print("inside color node", color_nodes_value)
+            unique_values = pd.DataFrame(self.data['nodes'])[color_nodes_value].unique()
+            colors = get_distinct_colors(len(unique_values))
+            value_color_mapping = {x:y for x, y in zip(unique_values, colors)}
+            for node in self.data['nodes']:
+                node['color'] = value_color_mapping[node[color_nodes_value]]
+        # filter the data currently shown
+        filtered_nodes = [x['id'] for x in self.filtered_data['nodes']]
+        self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
+        graph_data = self.filtered_data
+        return graph_data
+
+    def _callback_color_edges(self, graph_data, color_edges_value):
+        # color option is None, revert back all changes
+        if color_edges_value == 'None':
+            # revert to default color
+            for edge in self.data['edges']:
+                edge['color']['color'] = DEFAULT_COLOR
+        else:
+            print("inside color edge", color_edges_value)
+            unique_values = pd.DataFrame(self.data['edges'])[color_edges_value].unique()
+            colors = get_distinct_colors(len(unique_values))
+            value_color_mapping = {x:y for x, y in zip(unique_values, colors)}
+            for edge in self.data['edges']:
+                edge['color']['color'] = value_color_mapping[edge[color_edges_value]]
+        # filter the data currently shown
+        filtered_edges = [x['id'] for x in self.filtered_data['edges']]
+        self.filtered_data['edges'] = [x for x in self.data['edges'] if x['id'] in filtered_edges]
+        graph_data = self.filtered_data
+        return graph_data
 
     def plot(self, debug=False):
         """Plot the network by running the Dash server 
@@ -59,6 +143,7 @@ class Jaal:
         def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, color_nodes_value, color_edges_value, graph_data):
             # fetch the id of option which triggered
             ctx = dash.callback_context
+            # if its the first call
             if not ctx.triggered:
                 print("No trigger")
                 return PreventUpdate
@@ -67,88 +152,19 @@ class Jaal:
                 input_id = ctx.triggered[0]['prop_id'].split('.')[0]
                 # perform operation incase of search graph option
                 if input_id == "search_graph":
-                    # highlight the nodes which match the search text
-                    nodes = graph_data['nodes']
-                    for node in nodes:
-                        if search_text not in node['label'].lower():
-                            node['color'] = '#f4f8fe'
-                        else:
-                            node['color'] = DEFAULT_COLOR
-                    graph_data['nodes'] = nodes
+                    graph_data = self._callback_search_graph(graph_data, search_text)
                 # incase filter nodes was triggered
                 elif input_id == 'filter_nodes':
-                    print("inside filter with text:", filter_nodes_text)
-                    self.filtered_data = self.data.copy()
-                    node_df = pd.DataFrame(self.filtered_data['nodes'])
-                    try:
-                        node_list = node_df.query(filter_nodes_text)['id'].tolist()
-                        nodes = []
-                        for node in self.filtered_data['nodes']:
-                            if node['id'] in node_list:
-                                nodes.append(node)
-                        self.filtered_data['nodes'] = nodes
-                        graph_data = self.filtered_data
-                    except: 
-                        # node_list = node_df['id'].tolist()
-                        graph_data = self.data
-                        print("wrong node filter query!!")
+                    graph_data = self._callback_filter_nodes(graph_data, filter_nodes_text)
                 # incase filter edges was triggered
                 elif input_id == 'filter_edges':
-                    print("inside filter with text:", filter_edges_text)
-                    self.filtered_data = self.data.copy()
-                    edges_df = pd.DataFrame(self.filtered_data['edges'])
-                    try:
-                        edges_list = edges_df.query(filter_edges_text)['id'].tolist()
-                        edges = []
-                        for edge in self.filtered_data['edges']:
-                            if edge['id'] in edges_list:
-                                edges.append(edge)
-                        self.filtered_data['edges'] = edges
-                        graph_data = self.filtered_data
-                    except:
-                        # edges_list = edges_df['id'].tolist()
-                        graph_data = self.data
-                        print("wrong edge filter query!!")
+                    graph_data = self._callback_filter_edges(graph_data, filter_edges_text)
                 # If color node text is provided
                 if input_id == 'color_nodes':
-                    # color option is None, revert back all changes
-                    if color_nodes_value == 'None':
-                        # revert to default color
-                        for node in self.data['nodes']:
-                            node['color'] = DEFAULT_COLOR
-                    else:
-                        print("inside color node", color_nodes_value)
-                        unique_values = pd.DataFrame(self.data['nodes'])[color_nodes_value].unique()
-                        colors = get_distinct_colors(len(unique_values))
-                        value_color_mapping = {x:y for x, y in zip(unique_values, colors)}
-                        for node in self.data['nodes']:
-                            node['color'] = value_color_mapping[node[color_nodes_value]]
-                        # import pdb; pdb.set_trace()
-                    # filter the data currently shown
-                    filtered_nodes = [x['id'] for x in self.filtered_data['nodes']]
-                    # filtered_edges = [x['id'] for x in self.filtered_data['edges']]
-                    self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
-                    graph_data = self.filtered_data
+                    graph_data = self._callback_color_nodes(graph_data, color_nodes_value)
                 # If color edge text is provided
                 if input_id == 'color_edges':
-                    # color option is None, revert back all changes
-                    if color_edges_value == 'None':
-                        # revert to default color
-                        for edge in self.data['edges']:
-                            edge['color']['color'] = DEFAULT_COLOR
-                    else:
-                        print("inside color edge", color_edges_value)
-                        unique_values = pd.DataFrame(self.data['edges'])[color_edges_value].unique()
-                        colors = get_distinct_colors(len(unique_values))
-                        value_color_mapping = {x:y for x, y in zip(unique_values, colors)}
-                        for edge in self.data['edges']:
-                            edge['color']['color'] = value_color_mapping[edge[color_edges_value]]
-                        # import pdb; pdb.set_trace()
-                    # filter the data currently shown
-                    filtered_edges = [x['id'] for x in self.filtered_data['edges']]
-                    # filtered_edges = [x['id'] for x in self.filtered_data['edges']]
-                    self.filtered_data['edges'] = [x for x in self.data['edges'] if x['id'] in filtered_edges]
-                    graph_data = self.filtered_data
+                    graph_data = self._callback_color_edges(graph_data, color_edges_value)
             # finally return the modified data
             return graph_data
         # run the server

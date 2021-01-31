@@ -26,7 +26,7 @@ def parse_dataframe(edge_df, node_df=None):
     # create node list w.r.t. the presence of absence of node_df
     nodes = []
     if node_df is None:
-        node_list = list(set(node_df['Source'].unique().tolist() + node_df['Target'].unique().tolist()))
+        node_list = list(set(edge_df['from'].unique().tolist() + edge_df['to'].unique().tolist()))
         nodes = [{'id': node_name, 'label': node_name, 'shape': 'dot', 'size': 7} for node_name in node_list]
     else:
         for node in node_df.to_dict(orient='records'):

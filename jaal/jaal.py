@@ -7,13 +7,13 @@ Main class for Jaal visualization
 import dash
 import visdcc
 import pandas as pd
-from layout import get_app_layout
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 from datasets.parse_dataframe import parse_dataframe
+from layout import get_app_layout, get_distinct_colors, DEFAULT_COLOR
 
 # class
 class Jaal:
@@ -72,7 +72,7 @@ class Jaal:
                         if search_text not in node['label'].lower():
                             node['color'] = '#f4f8fe'
                         else:
-                            node['color'] = '#97C2FC'
+                            node['color'] = DEFAULT_COLOR
                     graph_data['nodes'] = nodes
                 # incase filter nodes was triggered
                 elif input_id == 'filter_nodes':
@@ -108,9 +108,26 @@ class Jaal:
                         # edges_list = edges_df['id'].tolist()
                         graph_data = self.data
                         print("wrong edge filter query!!")
-                #
-                elif input_id == 'color_nodes':
-                    print("color_nodes with text", color_nodes_value)
+                # If color option is selected
+                if input_id == 'color_nodes':
+                    # color option is None, revert back all changes
+                    if color_nodes_value == 'None':
+                        # revert to default color
+                        for node in self.data['nodes']:
+                            node['color'] = DEFAULT_COLOR
+                    else:
+                        print("inside color node", color_nodes_value)
+                        unique_values = pd.DataFrame(self.data['nodes'])[color_nodes_value].unique()
+                        colors = get_distinct_colors(len(unique_values))
+                        value_color_mapping = {x:y for x, y in zip(unique_values, colors)}
+                        for node in self.data['nodes']:
+                            node['color'] = value_color_mapping[node[color_nodes_value]]
+                        # import pdb; pdb.set_trace()
+                    # filter the data currently shown
+                    filtered_nodes = [x['id'] for x in self.filtered_data['nodes']]
+                    # filtered_edges = [x['id'] for x in self.filtered_data['edges']]
+                    self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
+                    graph_data = self.filtered_data
             # finally return the modified data
             return graph_data
         # run the server

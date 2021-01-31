@@ -11,6 +11,41 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
+# Constants
+#--------------
+# default node and egde color
+DEFAULT_COLOR = '#97C2FC'
+
+# Taken from https://stackoverflow.com/questions/470690/how-to-automatically-generate-n-distinct-colors
+KELLY_COLORS_HEX = [
+    "#FFB300", # Vivid Yellow
+    "#803E75", # Strong Purple
+    "#FF6800", # Vivid Orange
+    "#A6BDD7", # Very Light Blue
+    "#C10020", # Vivid Red
+    "#CEA262", # Grayish Yellow
+    "#817066", # Medium Gray
+
+    # The following don't work well for people with defective color vision
+    "#007D34", # Vivid Green
+    "#F6768E", # Strong Purplish Pink
+    "#00538A", # Strong Blue
+    "#FF7A5C", # Strong Yellowish Pink
+    "#53377A", # Strong Violet
+    "#FF8E00", # Vivid Orange Yellow
+    "#B32851", # Strong Purplish Red
+    "#F4C800", # Vivid Greenish Yellow
+    "#7F180D", # Strong Reddish Brown
+    "#93AA00", # Vivid Yellowish Green
+    "#593315", # Deep Yellowish Brown
+    "#F13A13", # Vivid Reddish Orange
+    "#232C16", # Dark Olive Green
+    ]
+
+def get_distinct_colors(n):
+    if n <= 20:
+        return KELLY_COLORS_HEX[:n]
+
 # Code
 #---------
 def create_card(id, title, value, description=""):
@@ -151,16 +186,22 @@ def get_app_layout(graph_data):
     """
     # find categorical features of nodes
     node_df = pd.DataFrame(graph_data['nodes'])
-    cat_node_features = node_df.columns[node_df.dtypes == 'object'].tolist() 
-    cat_node_features.remove('id')
-    cat_node_features.remove('label')
-    cat_node_features.remove('shape')
+    cat_node_features = ['None'] + node_df.columns[(node_df.dtypes == 'object')  & (node_df.apply(pd.Series.nunique) < 21)].tolist()
+    try:
+        cat_node_features.remove('shape')
+        cat_node_features.remove('label')
+        cat_node_features.remove('id')
+    except:
+        pass
     # find categorical features of edges
     edge_df = pd.DataFrame(graph_data['edges'])
-    cat_edge_features = edge_df.columns[edge_df.dtypes == 'object'].tolist() 
-    cat_edge_features.remove('from')
-    cat_edge_features.remove('to')
-    cat_edge_features.remove('id')
+    cat_edge_features = ['None'] + edge_df.columns[(edge_df.dtypes == 'object') & (edge_df.apply(pd.Series.nunique) < 21)].tolist()
+    try:
+        cat_edge_features.remove('from')
+        cat_edge_features.remove('to')
+        cat_edge_features.remove('id')
+    except:
+        pass
     # return the layout
     return html.Div([
             create_row(html.H2(children="Jaal")), # Title

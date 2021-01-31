@@ -164,7 +164,7 @@ def get_app_layout(graph_data):
     except:
         pass
     # Step 3: create and return the layout
-    image_filename = "assest/logo.png"
+    image_filename = "jaal/assest/logo.png"
     encoded_image = base64.b64encode(open(image_filename, 'rb').read())
     return html.Div([
             # create_row(html.H2(children="Jaal")), # Title

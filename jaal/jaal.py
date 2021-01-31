@@ -118,7 +118,7 @@ class Jaal:
         graph_data = self.filtered_data
         return graph_data
 
-    def plot(self, debug=False):
+    def plot(self, debug=False, host="127.0.0.1", port="8050"):
         """Plot the network by running the Dash server 
 
         Parameter
@@ -168,4 +168,4 @@ class Jaal:
             # finally return the modified data
             return graph_data
         # run the server
-        app.run_server(debug=debug)
+        app.run_server(debug=debug, host=host, port=port)

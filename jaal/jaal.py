@@ -146,7 +146,7 @@ class Jaal:
             # if its the first call
             if not ctx.triggered:
                 print("No trigger")
-                return PreventUpdate
+                return self.data
             else:
                 # find the id of the option which was triggered 
                 input_id = ctx.triggered[0]['prop_id'].split('.')[0]

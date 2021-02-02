@@ -22,7 +22,7 @@ def parse_dataframe(edge_df, node_df=None):
     if node_df is not None:
         if 'id' not in node_df.columns:
             raise Exception("Node dataframe missing 'id' column.")
-
+    
     # create node list w.r.t. the presence of absence of node_df
     nodes = []
     if node_df is None:
@@ -34,6 +34,6 @@ def parse_dataframe(edge_df, node_df=None):
     # create edges from df
     edges = []
     for row in edge_df.to_dict(orient='records'):
-        edges.append({**row, **{'id': row['from'] + "__" + row['to'], 'color': {'color': '#97C2FC'}}})
+        edges.append({**row, **{'id': str(row['from']) + "__" + str(row['to']), 'color': {'color': '#97C2FC'}}})
     # return
     return {'nodes': nodes, 'edges': edges}

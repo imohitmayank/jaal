@@ -13,7 +13,7 @@ __pycache__/
 .vscode/
 
 # notebook
-notebooks/*
+notebooks/
 
 # Distribution / packaging
 .Python

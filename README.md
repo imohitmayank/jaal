@@ -1,5 +1,7 @@
 <img src="jaal/assest/logo.png" alt="jaal logo"/>
 
+[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.python.org/pypi/jaal/)
+
 *Your interactive network visualizing dashboard*
 
 ## What is Jaal

@@ -118,7 +118,7 @@ class Jaal:
         graph_data = self.filtered_data
         return graph_data
 
-    def plot(self, debug=False, host="127.0.0.1", port="8050"):
+    def plot(self, debug=False, host="127.0.0.1", port="8050", directed=False):
         """Plot the network by running the Dash server 
 
         Parameter
@@ -129,7 +129,7 @@ class Jaal:
         # create the app
         app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
         # # define layout
-        app.layout = get_app_layout(self.data)
+        app.layout = get_app_layout(self.data, directed=directed)
         # create the callbacks
         @app.callback(
             Output('graph', 'data'),

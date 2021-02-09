@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="jaal",
-    version="0.0.5",
+    version="0.0.6",
     author="Mohit Mayank",
     author_email="mohitmayank1@gmail.com",
     description="jaal - your interactive network visualizer dashboard",

@@ -123,8 +123,17 @@ class Jaal:
 
         Parameter
         ----------
-        debug: boolean
-            run the debug instance of Dash?
+            debug (boolean)
+                run the debug instance of Dash?
+
+            host: string
+                ip address on which to run the dash server (default: 127.0.0.1)
+
+            port: string
+                port on which to expose the dash server (default: 8050)
+
+            directed: boolean
+                process the graph as directed graph?
         """
         # create the app
         app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])

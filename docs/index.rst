@@ -114,9 +114,8 @@ Connect with me on `LinkedIn <https://www.linkedin.com/in/imohitmayank/>`_ .
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: jaal.jaal
-    :members:
-
+   code
+   
 Indices and tables
 --------------------
 

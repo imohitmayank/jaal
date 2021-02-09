@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Introducing Jaal - Interacting with Network Made Easy! &#8212; jaal 0.0.5 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code description" href="code.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="introducing-jaal-interacting-with-network-made-easy">
+<h1>Introducing Jaal - Interacting with Network Made Easy!<a class="headerlink" href="#introducing-jaal-interacting-with-network-made-easy" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://pypi.python.org/pypi/jaal/"><img alt="PyPI version fury.io" src="https://badge.fury.io/py/ansicolortags.svg" /></a></p>
+<p>Your interactive network visualizing dashboard in Python</p>
+<p>Visit the package’s <a class="reference external" href="https://github.com/imohitmayank/jaal/">github page</a> , and if you like it, please don’t shy from clicking on the star 😏</p>
+<p>—</p>
+<div class="section" id="what-is-jaal">
+<h2>👉 What is Jaal?<a class="headerlink" href="#what-is-jaal" title="Permalink to this headline">¶</a></h2>
+<p>Jaal is a python based interactive network visualizing tool built using Dash and Visdcc. As it’s built using Dash, we can consider it as more of a dashboard rather than a network plot. Because of this, along with the basic features, Jaal also provides multiple options to play with the network data such as searching, filtering and even colouring nodes and edges in the graph. And all of this within 2 lines of codes :)</p>
+</div>
+<div class="section" id="install">
+<h2>👉 Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>Installing Jaal is super easy, just run the following,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">jaal</span>
+</pre></div>
+</div>
+<p>And you are done 😆</p>
+<p>Note, it’s recommended to create a virtual environment before installing. This can be easily done using python -m venv myenv and then to activate the environment we run,</p>
+<ol class="arabic simple">
+<li><p>(Windows) <code class="docutils literal notranslate"><span class="pre">.\\myvenv\\Scripts\\activate.bat</span></code></p></li>
+<li><p>(Linux) <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">myvenv/bin/activate</span></code></p></li>
+</ol>
+</div>
+<div class="section" id="getting-started">
+<h2>👉 Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>After installing Jaal, we need to fetch the data and call plot function in Jaal. Let’s do this by playing with Game of Thrones dataset which is included in the package. The complete code to fetch the data and plot is as follows,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># import</span>
+<span class="kn">from</span> <span class="nn">jaal</span> <span class="kn">import</span> <span class="n">Jaal</span>
+<span class="kn">from</span> <span class="nn">jaal.datasets</span> <span class="kn">import</span> <span class="n">load_got</span>
+<span class="c1"># load the data</span>
+<span class="n">edge_df</span><span class="p">,</span> <span class="n">node_df</span> <span class="o">=</span> <span class="n">load_got</span><span class="p">()</span>
+<span class="c1"># init Jaal and run server</span>
+<span class="n">Jaal</span><span class="p">(</span><span class="n">edge_df</span><span class="p">,</span> <span class="n">node_df</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here first we import Jaal main class and the dataset loading function load_got. Later we loaded the GoT dataset from the package. This gives us two files,</p>
+<ol class="arabic simple">
+<li><p><strong>edge_df:</strong> it’s a pandas dataframe with at least from and to columns, which represents the edge relationship between the entities</p></li>
+<li><p><strong>node_df:</strong> it’s a pandas dataframe with at least id column which contains the unique node names</p></li>
+</ol>
+<p>Note, edge_df is mandatory and node_df is optional. Also, we can include additional columns in these files which are automatically considered as edge or node features respectively.</p>
+<p>Next, we pass the data into Jaal and call plot. This will lead the console to prompt the default localhost address (127:0.0.1:8050) where Jaal is running. We can access it to see the following dashboard,</p>
+<div class="figure align-center" id="id1">
+<img alt="_images/dashboard.png" src="_images/dashboard.png" />
+<p class="caption"><span class="caption-text">Jaal Dashboard</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="features">
+<h2>👉 Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>At present, the dashboard consist of the following sections,</p>
+<ol class="arabic simple">
+<li><p><strong>Settings panel:</strong> here we have multiple options to play with the graph data. It further contains the following sub-sections,</p>
+<ol class="loweralpha simple">
+<li><p><strong>Search:</strong> can be used to highlight a node in the graph</p></li>
+<li><p><strong>Filter:</strong> supports pandas query language and can be used to filter the graph data based on nodes or edge features.</p></li>
+<li><p><strong>Color:</strong> can be used to color nodes or edges based on their categorical features. Note, currently only features with at max 20 cardinality are supported.</p></li>
+</ol>
+</li>
+<li><p><strong>Graph:</strong> the network graph plotted using visdcc.</p></li>
+</ol>
+</div>
+<div class="section" id="examples">
+<h2>👉 Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Let’s go through the example of each of the features we discussed above one by one. We will use the GoT dataset.</p>
+<ol class="arabic simple">
+<li><p><strong>Searching</strong></p></li>
+</ol>
+<p>The first option is searching, where we can search for a specific node in the graph. It supports character by character search on the node labels. Below is an example where we are trying to search for “Arya”,</p>
+<div class="figure align-center">
+<img alt="_images/jaal_search.gif" src="_images/jaal_search.gif" />
+</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>Filtering</strong></p></li>
+</ol>
+<p>Next, we have filtering. Jaal supports the option to search on both node and edges features. For this, we provide separate text areas. Below we can see the live effect of node and edge filtering query.</p>
+<div class="figure align-center">
+<img alt="_images/jaal_filter.gif" src="_images/jaal_filter.gif" />
+</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>Coloring</strong></p></li>
+</ol>
+<p>Finally, instead of filtering, we may want to see the overall distribution of any feature. Currently, Jaal handles this by providing the option to color nodes or edges based on any categorical feature. We can see a live-action example below.</p>
+<div class="figure align-center">
+<img alt="_images/jaal_color.gif" src="_images/jaal_color.gif" />
+</div>
+<p>—</p>
+<p>Connect with me on <a class="reference external" href="https://www.linkedin.com/in/imohitmayank/">LinkedIn</a> .</p>
+<p>—</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code description</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Mohit Mayank.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/imohitmayank/jaal" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

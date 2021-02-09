@@ -4,6 +4,8 @@
 
 *Your interactive network visualizing dashboard*
 
+Documentation: [Here](http://mohitmayank.com/jaal/)
+
 ## What is Jaal
 
 Jaal is a python based interactive network visualizing tool built using Dash and Visdcc. Along with the basic features, Jaal also provides multiple option to play with the network data such as searching graph, filtering and even coloring nodes and edges in the graph. And all of this within 2 lines of codes :)

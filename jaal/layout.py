@@ -207,7 +207,8 @@ def get_app_layout(graph_data, directed=False):
                                 data = graph_data,
                                 options = dict(height= '600px', width= '100%', 
                                                interaction={'hover': True},
-                                               edges={'arrows':{'to':directed}}
+                                               edges={'arrows':{'to':directed}},
+                                               physics={'stabilization':{'iterations': 100}}
                                                ))
                 ,width=9)]),
             # stats cards

@@ -1,6 +1,6 @@
 <img src="jaal/assest/logo.png" alt="jaal logo"/>
 
-[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.python.org/pypi/jaal/)
+![PyPI](https://img.shields.io/pypi/v/jaal) ![GitHub](https://img.shields.io/github/license/imohitmayank/jaal) ![GitHub Repo stars](https://img.shields.io/github/stars/imohitmayank/jaal?style=social)
 
 *Your interactive network visualizing dashboard*
 

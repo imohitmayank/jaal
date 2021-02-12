@@ -21,5 +21,10 @@ setuptools.setup(
     python_requires='>=3.6',
     package_data={'': ['datasets/*', 'assest/logo.png', 'datasets/got/*']},
     include_package_data=True,
-    install_requires=['dash', 'visdcc', 'pandas', 'dash_core_components', 'dash_html_components', 'dash_bootstrap_components'],
+    install_requires=['dash>=1.19.0', 
+                      'visdcc>=0.0.40', 
+                      'pandas>=1.2.1', 
+                      'dash_core_components>=1.15.0', 
+                      'dash_html_components>=1.1.2', 
+                      'dash_bootstrap_components>=0.11.1'],
 )

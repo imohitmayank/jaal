@@ -54,7 +54,7 @@ Here first we import `Jaal` main class and the dataset loading function `load_go
 
 Note, edge_df is mandatory and node_df is optional. Also we can include additional columns in these files which are automatically conidered as edge or node features respectively.
 
-After running the plot, the console will prompt the default localhost address (`127:0.0.1:8050`) where Jaal is running. Access it to see the following dashboard,
+After running the plot, the console will prompt the default localhost address (`127.0.0.1:8050`) where Jaal is running. Access it to see the following dashboard,
 
 <img src="jaal/assest/dashboard.png" alt="dashboard"/>
 

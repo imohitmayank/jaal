@@ -78,6 +78,26 @@ At present, the dashboard consist of following sections,
 ### 3. Coloring
 <img src="jaal/assest/jaal_color.gif" alt="dashboard"/>
 
+## Extra settings
+
+### Display edge label
+
+To display labels over edges, we need to add a `label` attribute (column) in the `edge_df`. Also, it has to be in `string` format. 
+For example, using the GoT dataset, by adding the following line before the `Jaal` call, we can display the edge labels.
+
+```python
+# add edge labels
+edge_df.loc[:, 'label'] = edge_df.loc[:, 'weight'].astype(str)
+```
+
+### Directed edges
+
+By default, `Jaal` plot undirected edges. This setting can be changed by,
+
+```python
+Jaal(edge_df, node_df).plot(directed=True)
+```
+
 ## Issue tracker
 
 Please report any bug or feature idea using Jaal issue tracker: https://github.com/imohitmayank/jaal/issues

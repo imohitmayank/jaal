@@ -41,7 +41,8 @@ def parse_dataframe(edge_df, node_df=None):
     # create edges from df
     edges = []
     for row in edge_df.to_dict(orient='records'):
-        edges.append({**row, **{'id': row['from'] + "__" + row['to'], 'color': {'color': '#97C2FC'}}})
+        label = row['label'] if 'label' in row else ''
+        edges.append({**row, **{'label': label, 'id': row['from'] + "__" + row['to'], 'color': {'color': '#97C2FC'}}})
     
     # return
     return {'nodes': nodes, 'edges': edges}

@@ -94,7 +94,7 @@ filter_node_form = dbc.FormGroup([
     dbc.Textarea(id="filter_nodes", placeholder="Enter filter node query here..."),
     dbc.FormText(
         html.P([
-            "Filter on nodes proprties by using ",
+            "Filter on nodes properties by using ",
             html.A("Pandas Query syntax", 
             href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html"),
         ]),
@@ -107,7 +107,7 @@ filter_edge_form = dbc.FormGroup([
     dbc.Textarea(id="filter_edges", placeholder="Enter filter edge query here..."),
     dbc.FormText(
         html.P([
-            "Filter on edges proprties by using ",
+            "Filter on edges properties by using ",
             html.A("Pandas Query syntax", 
             href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html"),
         ]),

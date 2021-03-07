@@ -1,5 +1,5 @@
 # testing call file
-jaal_call.py
+# jaal_call.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -111,6 +111,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+myenv/
 .env
 .venv
 env/

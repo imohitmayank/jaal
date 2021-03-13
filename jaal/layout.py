@@ -226,10 +226,10 @@ def get_app_layout(graph_data, color_legends=[], directed=False):
                                 data = graph_data,
                                 options = dict(height= '600px', width= '100%', 
                                                interaction={'hover': True},
-                                               edges={'arrows':{'to':directed}},
-                                               physics={'stabilization':{'iterations': 100}}
+                                               edges={'arrows':{'to': directed}},
+                                               physics={'stabilization': {'iterations': 100}}
                                                ))
-                ,width=9)]),
+                , width=9)]),
             # stats cards
             # dbc.Row([
             #     dbc.Col(create_card(id="nodes_count", value="NA", description='Nodes'),width={'offset':3}),

@@ -13,7 +13,7 @@ import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 from .datasets.parse_dataframe import parse_dataframe
-from .layout import get_app_layout, get_distinct_colors, DEFAULT_COLOR
+from .layout import get_app_layout, get_distinct_colors, create_color_legend, DEFAULT_COLOR
 
 # class
 class Jaal:
@@ -32,6 +32,8 @@ class Jaal:
         print("Parsing the data...", end="")
         self.data = parse_dataframe(edge_df, node_df)
         self.filtered_data = self.data.copy()
+        self.node_value_color_mapping = {}
+        self.edge_value_color_mapping = {}
         print("Done")
 
     def _callback_search_graph(self, graph_data, search_text):
@@ -81,6 +83,7 @@ class Jaal:
         return graph_data
 
     def _callback_color_nodes(self, graph_data, color_nodes_value):
+        value_color_mapping = {}
         # color option is None, revert back all changes
         if color_nodes_value == 'None':
             # revert to default color
@@ -97,9 +100,10 @@ class Jaal:
         filtered_nodes = [x['id'] for x in self.filtered_data['nodes']]
         self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
         graph_data = self.filtered_data
-        return graph_data
+        return graph_data, value_color_mapping
 
     def _callback_color_edges(self, graph_data, color_edges_value):
+        value_color_mapping = {}
         # color option is None, revert back all changes
         if color_edges_value == 'None':
             # revert to default color
@@ -116,7 +120,36 @@ class Jaal:
         filtered_edges = [x['id'] for x in self.filtered_data['edges']]
         self.filtered_data['edges'] = [x for x in self.data['edges'] if x['id'] in filtered_edges]
         graph_data = self.filtered_data
-        return graph_data
+        return graph_data, value_color_mapping
+
+    def get_color_popover_legend_children(self, node_value_color_mapping={}, edge_value_color_mapping={}):
+        """Get the popover legends for node and edge based on the color setting
+        """
+        # var
+        popover_legend_children = []
+
+        # common function
+        def create_legends_for(title="Node", legends={}):
+            # add title
+            _popover_legend_children = [dbc.PopoverHeader(f"{title} legends")]
+            # add values if present
+            if len(legends) > 0:
+                for key, value in legends.items():
+                    _popover_legend_children.append(
+                        # dbc.PopoverBody(f"Key: {key}, Value: {value}")
+                        create_color_legend(key, value)
+                        )
+            else: # otherwise add filler
+                _popover_legend_children.append(dbc.PopoverBody(f"no {title.lower()} colored!"))
+            #
+            return _popover_legend_children
+
+        # add node color legends
+        popover_legend_children.extend(create_legends_for("Node", node_value_color_mapping))
+        # add edge color legends
+        popover_legend_children.extend(create_legends_for("Edge", edge_value_color_mapping))
+        #
+        return popover_legend_children
 
     def plot(self, debug=False, host="127.0.0.1", port="8050", directed=False):
         """Plot the network by running the Dash server 
@@ -137,11 +170,24 @@ class Jaal:
         """
         # create the app
         app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-        # # define layout
-        app.layout = get_app_layout(self.data, directed=directed)
-        # create the callbacks
+
+        # define layout
+        app.layout = get_app_layout(self.data, color_legends=self.get_color_popover_legend_children(), directed=directed)
+
+        # create callbacks to toggle legend popover
         @app.callback(
-            Output('graph', 'data'),
+            Output("color-legend-popup", "is_open"),
+            [Input("color-legend-toggle", "n_clicks")],
+            [State("color-legend-popup", "is_open")],
+        )
+        def toggle_popover(n, is_open):
+            if n:
+                return not is_open
+            return is_open
+        
+        # create the main callbacks
+        @app.callback(
+            [Output('graph', 'data'), Output('color-legend-popup', 'children')],
             [Input('search_graph', 'value'),
             Input('filter_nodes', 'value'),
             Input('filter_edges', 'value'),
@@ -155,7 +201,7 @@ class Jaal:
             # if its the first call
             if not ctx.triggered:
                 print("No trigger")
-                return self.data
+                return [self.data, self.get_color_popover_legend_children()]
             else:
                 # find the id of the option which was triggered 
                 input_id = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -170,11 +216,13 @@ class Jaal:
                     graph_data = self._callback_filter_edges(graph_data, filter_edges_text)
                 # If color node text is provided
                 if input_id == 'color_nodes':
-                    graph_data = self._callback_color_nodes(graph_data, color_nodes_value)
+                    graph_data, self.node_value_color_mapping = self._callback_color_nodes(graph_data, color_nodes_value)
                 # If color edge text is provided
                 if input_id == 'color_edges':
-                    graph_data = self._callback_color_edges(graph_data, color_edges_value)
+                    graph_data, self.edge_value_color_mapping = self._callback_color_edges(graph_data, color_edges_value)
+            # create the color legend childrens
+            color_popover_legend_children = self.get_color_popover_legend_children(self.node_value_color_mapping, self.edge_value_color_mapping)
             # finally return the modified data
-            return graph_data
+            return [graph_data, color_popover_legend_children]
         # run the server
         app.run_server(debug=debug, host=host, port=port)

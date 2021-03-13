@@ -70,12 +70,20 @@ def create_card(id, value, description):
                 html.P(children=description),
             ]))
 
-def fetch_row_style(style=""):
+def create_color_legend(text, color):
+    """Individual row for the color legend
+    """
+    return create_row([
+        html.Div(style={'width': '10px', 'height': '10px', 'background-color': color}),
+        html.Div(text, style={'padding-left': '10px'}),
+    ]) 
+
+def fetch_flex_row_style():
     return {'display': 'flex', 'flex-direction': 'row', 'justify-content': 'center', 'align-items': 'center'}
 
-def create_row(children, style=""):
+def create_row(children, style=fetch_flex_row_style()):
     return dbc.Row(children, 
-                   style=fetch_row_style(style),
+                   style=style,
                    className="column flex-display")
 
 search_form = dbc.FormGroup(
@@ -138,7 +146,7 @@ def get_select_form_layout(id, options, label, description):
                 dbc.FormText(description, color="secondary",)
             ,])
 
-def get_app_layout(graph_data, directed=False):
+def get_app_layout(graph_data, color_legends=[], directed=False):
     """Create and return the layout of the app
 
     Parameters
@@ -176,16 +184,27 @@ def get_app_layout(graph_data, directed=False):
                 dbc.Col([
                     # setting panel
                     dbc.Form([
-                        # html.H5("Setting Panel"),
-                        # html.Hr(className="my-2"),
+                        # ---- search section ----
                         html.H6("Search"),
                         html.Hr(className="my-2"),
-                        search_form, 
+                        search_form,
+                        
+                        # ---- filter section ----
                         html.H6("Filter"),
                         html.Hr(className="my-2"),
                         filter_node_form, 
                         filter_edge_form,
-                        html.H6("Color"),
+                        
+                        # ---- color section ----
+                        create_row([
+                            html.H6("Color"), # heading
+                            dbc.Button("Legends", id="color-legend-toggle", outline=True, color="secondary", size="sm"), # legend
+                            # add the legends popup
+                            dbc.Popover(
+                                children=color_legends,
+                                id="color-legend-popup", is_open=False, target="color-legend-toggle",
+                            ),
+                        ], {**fetch_flex_row_style(), 'margin-left': 0, 'margin-right':0, 'justify-content': 'space-between'}),
                         html.Hr(className="my-2"), 
                         get_select_form_layout(
                             id='color_nodes',

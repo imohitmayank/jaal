@@ -6,11 +6,16 @@
 Introducing Jaal - Interacting with Network Made Easy!
 ================================================================
 
-|PyPI version fury.io|
+|PyPI version shields.io|
 
-.. |PyPI version fury.io| image:: https://badge.fury.io/py/ansicolortags.svg
-   :target: https://pypi.python.org/pypi/jaal/
+.. |PyPI version shields.io| image:: https://img.shields.io/pypi/v/jaal.svg
+   :target: hhttps://img.shields.io/pypi/v/jaal
 
+|PyPI download month|
+
+.. |PyPI download month| image:: https://img.shields.io/pypi/dm/jaal.svg
+   :target:  https://img.shields.io/pypi/v/jaal.svg
+   
 Your interactive network visualizing dashboard in Python
 
 Visit the package's `github page <https://github.com/imohitmayank/jaal/>`_ , and if you like it, please don't shy from clicking on the star 😏

@@ -10,10 +10,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../'))
+
+master_doc="index"
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +24,7 @@ copyright = '2021, Mohit Mayank'
 author = 'Mohit Mayank'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.5'
+release = '0.0.6'
 
 
 # -- General configuration ---------------------------------------------------

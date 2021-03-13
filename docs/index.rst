@@ -103,18 +103,19 @@ Finally, instead of filtering, we may want to see the overall distribution of an
 .. figure::  source/jaal_color.gif
    :align:   center
 
----
-
-Connect with me on `LinkedIn <https://www.linkedin.com/in/imohitmayank/>`_ .
-
----
+---------------
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    code
+
+.. toctree::
+   :maxdepth: 2
+
+   changelog
+
    
 Indices and tables
 --------------------
@@ -122,3 +123,7 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+---------------
+
+Connect with me on `LinkedIn <https://www.linkedin.com/in/imohitmayank/>`_ .

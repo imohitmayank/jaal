@@ -107,7 +107,7 @@ If you are facing port related issue, please try the following way to run Jaal, 
 port=8050
 while True:
     try:
-        Jaal(edge_df, node_df).plot(directed=True,port=port)
+        Jaal(edge_df, node_df).plot(port=port)
     except:
         port+=1
 ```

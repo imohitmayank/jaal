@@ -97,6 +97,20 @@ By default, `Jaal` plot undirected edges. This setting can be changed by,
 ```python
 Jaal(edge_df, node_df).plot(directed=True)
 ```
+## Common Issue
+
+### Port related issue
+
+If you are facing port related issue, please try the following way to run Jaal, it can keep trying a new port till an empty one is found.
+
+```python
+port=8050
+while True:
+	try:
+        Jaal(edge_df, node_df).plot(port=port)
+	except:
+        port+=1
+```
 
 ## Issue tracker
 

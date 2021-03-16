@@ -6,11 +6,11 @@
 
 Documentation: [Here](http://mohitmayank.com/jaal/)
 
-## What is Jaal
+## 👉 What is Jaal
 
 Jaal is a python based interactive network visualizing tool built using Dash and Visdcc. Along with the basic features, Jaal also provides multiple option to play with the network data such as searching graph, filtering and even coloring nodes and edges in the graph. And all of this within 2 lines of codes :)
 
-## Requirements
+## 👉 Requirements
 
 Jaal requires following python packages, 
 1. Dash
@@ -20,7 +20,7 @@ Jaal requires following python packages,
 3. visdcc
 4. pandas
 
-## Install
+## 👉 Install
 
 Installing Jaal is super easy, just do the following,
 
@@ -34,7 +34,7 @@ Note, it's recommended to create a virtual enivornment before installing. This c
 1. (Windows) `.\\myvenv\\Scripts\\activate.bat`
 2. (Linux) `source myvenv/bin/activate`
 
-## Getting started
+## 👉 Getting started
 
 After installing Jaal, we need to fetch the data and call `plot` function in Jaal. This can be shown by playing with an included Game of Thrones dataset, as follows,
 
@@ -58,7 +58,7 @@ After running the plot, the console will prompt the default localhost address (`
 
 <img src="jaal/assest/dashboard.png" alt="dashboard"/>
 
-## Features
+## 👉 Features
 
 At present, the dashboard consist of following sections,
 1. **Setting panel:** here we can play with the graph data, i further contain following sections, 
@@ -67,7 +67,7 @@ At present, the dashboard consist of following sections,
     - **Color:** can be used to color nodes or edges based on their categorical features. Note, currently only features with at max 20 cardinality are supported. 
 2. **Graph:** the network graph in all its glory :)
 
-## Examples
+## 👉 Examples
 
 ### 1. Searching
 <img src="jaal/assest/jaal_search.gif" alt="dashboard"/>
@@ -78,7 +78,7 @@ At present, the dashboard consist of following sections,
 ### 3. Coloring
 <img src="jaal/assest/jaal_color.gif" alt="dashboard"/>
 
-## Extra settings
+## 👉 Extra settings
 
 ### Display edge label
 
@@ -97,7 +97,7 @@ By default, `Jaal` plot undirected edges. This setting can be changed by,
 ```python
 Jaal(edge_df, node_df).plot(directed=True)
 ```
-## Common Issue
+## 👉 Common Issue
 
 ### Port related issue
 
@@ -112,19 +112,19 @@ while True:
         port+=1
 ```
 
-## Issue tracker
+## 👉 Issue tracker
 
 Please report any bug or feature idea using Jaal issue tracker: https://github.com/imohitmayank/jaal/issues
 
-## Collaboration
+## 👉 Collaboration
 
 Any type of collaboration is appreciated. It could be  testing, development, documentation and other tasks that is useful to the project. Feel free to connect with me regarding this.
 
-## Contact
+## 👉 Contact
 
 You can connect with me on [LinkedIn](https://www.linkedin.com/in/imohitmayank/) or mail me at mohitmayank1@gmail.com.
 
-## License
+## 👉 License
 
 Jaal is licensed under the terms of the MIT License (see the file
 LICENSE).

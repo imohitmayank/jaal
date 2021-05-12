@@ -52,7 +52,7 @@ Here first we import `Jaal` main class and the dataset loading function `load_go
 1. **edge_df:** its a pandas dataframe with atleast `from` and `to` column, which represents the edge relationship between the entities
 2. **node_df:** its an optional parameter, but should contains a `id` column with unique node names. 
 
-Note, edge_df is mandatory and node_df is optional. Also we can include additional columns in these files which are automatically conidered as edge or node features respectively.
+Note, edge_df is mandatory and node_df is optional. Also we can include additional columns in these files which are automatically considered as edge or node features respectively.
 
 After running the plot, the console will prompt the default localhost address (`127.0.0.1:8050`) where Jaal is running. Access it to see the following dashboard,
 
@@ -61,7 +61,7 @@ After running the plot, the console will prompt the default localhost address (`
 ## 👉 Features
 
 At present, the dashboard consist of following sections,
-1. **Setting panel:** here we can play with the graph data, i further contain following sections, 
+1. **Setting panel:** here we can play with the graph data, it further contain following sections:
     - **Search:** can be used to highlight a node in graph
     - **Filter:** supports pandas query language and can be used to filter the graph data based on nodes or edge features.
     - **Color:** can be used to color nodes or edges based on their categorical features. Note, currently only features with at max 20 cardinality are supported. 

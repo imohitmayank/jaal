@@ -3,7 +3,7 @@ Author: Mohit Mayank
 
 Layout code for the application
 """
-# Import 
+# Import
 #---------
 import os
 import visdcc
@@ -44,8 +44,22 @@ KELLY_COLORS_HEX = [
     "#232C16", # Dark Olive Green
     ]
 
+DEFAULT_OPTIONS = {
+    'height': '600px',
+    'width': '100%',
+    'interaction':{'hover': True},
+    'physics':{'stabilization':{'iterations': 100}}
+}
+
 # Code
 #---------
+def get_options(directed, opts_args):
+    opts = DEFAULT_OPTIONS.copy()
+    opts['edges'] = { 'arrows': { 'to': directed } }
+    if opts_args is not None:
+        opts.update(opts_args)
+    return opts
+
 def get_distinct_colors(n):
     """Return distict colors, currently atmost 20
 
@@ -76,13 +90,13 @@ def create_color_legend(text, color):
     return create_row([
         html.Div(style={'width': '10px', 'height': '10px', 'background-color': color}),
         html.Div(text, style={'padding-left': '10px'}),
-    ]) 
+    ])
 
 def fetch_flex_row_style():
     return {'display': 'flex', 'flex-direction': 'row', 'justify-content': 'center', 'align-items': 'center'}
 
 def create_row(children, style=fetch_flex_row_style()):
-    return dbc.Row(children, 
+    return dbc.Row(children,
                    style=style,
                    className="column flex-display")
 
@@ -103,7 +117,7 @@ filter_node_form = dbc.FormGroup([
     dbc.FormText(
         html.P([
             "Filter on nodes properties by using ",
-            html.A("Pandas Query syntax", 
+            html.A("Pandas Query syntax",
             href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html"),
         ]),
         color="secondary",
@@ -116,7 +130,7 @@ filter_edge_form = dbc.FormGroup([
     dbc.FormText(
         html.P([
             "Filter on edges properties by using ",
-            html.A("Pandas Query syntax", 
+            html.A("Pandas Query syntax",
             href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.query.html"),
         ]),
         color="secondary",
@@ -146,7 +160,7 @@ def get_select_form_layout(id, options, label, description):
                 dbc.FormText(description, color="secondary",)
             ,])
 
-def get_app_layout(graph_data, color_legends=[], directed=False):
+def get_app_layout(graph_data, color_legends=[], directed=False, vis_opts=None):
     """Create and return the layout of the app
 
     Parameters
@@ -188,13 +202,11 @@ def get_app_layout(graph_data, color_legends=[], directed=False):
                         html.H6("Search"),
                         html.Hr(className="my-2"),
                         search_form,
-                        
                         # ---- filter section ----
                         html.H6("Filter"),
                         html.Hr(className="my-2"),
-                        filter_node_form, 
+                        filter_node_form,
                         filter_edge_form,
-                        
                         # ---- color section ----
                         create_row([
                             html.H6("Color"), # heading
@@ -205,35 +217,26 @@ def get_app_layout(graph_data, color_legends=[], directed=False):
                                 id="color-legend-popup", is_open=False, target="color-legend-toggle",
                             ),
                         ], {**fetch_flex_row_style(), 'margin-left': 0, 'margin-right':0, 'justify-content': 'space-between'}),
-                        html.Hr(className="my-2"), 
+                        html.Hr(className="my-2"),
                         get_select_form_layout(
                             id='color_nodes',
                             options=[{'label': opt, 'value': opt} for opt in cat_node_features],
                             label='Color nodes by',
                             description='Select the categorical node property to color nodes by'
-                        ), 
+                        ),
                         get_select_form_layout(
                             id='color_edges',
                             options=[{'label': opt, 'value': opt} for opt in cat_edge_features],
                             label='Color edges by',
                             description='Select the categorical edge property to color edges by'
-                        ), 
-                    ], className="card", style={'padding': '5px', 'background': '#e5e5e5'}), 
+                        ),
+                    ], className="card", style={'padding': '5px', 'background': '#e5e5e5'}),
                 ],width=3, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
-                # graph 
+                # graph
                 dbc.Col(
-                    visdcc.Network(id = 'graph', 
-                                data = graph_data,
-                                options = dict(height= '600px', width= '100%', 
-                                               interaction={'hover': True},
-                                               edges={'arrows':{'to': directed}},
-                                               physics={'stabilization': {'iterations': 100}}
-                                               ))
-                , width=9)]),
-            # stats cards
-            # dbc.Row([
-            #     dbc.Col(create_card(id="nodes_count", value="NA", description='Nodes'),width={'offset':3}),
-            #     dbc.Col(create_card(id="edges_count", value="NA", description='Edges'),width={'offset':6})
-            # ])
-        ])
-    
+                    visdcc.Network(
+                        id = 'graph',
+                        data = graph_data,
+                        options = get_options(directed,vis_opts)),
+                        width=9)])
+    ])

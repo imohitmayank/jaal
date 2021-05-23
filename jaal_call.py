@@ -6,9 +6,11 @@ from jaal.datasets import load_got
 edge_df, node_df = load_got()
 
 # define vis options
-vis_opts = {'height': '600px', # change height
-            'interaction':{'hover': True}, # turn on-off the hover 
-            'physics':{'stabilization':{'iterations': 100}}} # define the convergence iteration of network
+vis_opts = {
+    "height": "600px",  # change height
+    "interaction": {"hover": True},  # turn on-off the hover
+    "physics": {"stabilization": {"iterations": 100}},
+}  # define the convergence iteration of network
 
 # init Jaal and run server (with opts)
 Jaal(edge_df, node_df).plot(vis_opts=vis_opts)

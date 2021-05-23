@@ -24,10 +24,10 @@ class Jaal:
         Parameters
         -------------
         edge_df: pandas dataframe
-            The network edge data stored in format of pandas dataframe 
-    
+            The network edge data stored in format of pandas dataframe
+
         node_df: pandas dataframe (optional)
-            The network node data stored in format of pandas dataframe 
+            The network node data stored in format of pandas dataframe
         """
         print("Parsing the data...", end="")
         self.data = parse_dataframe(edge_df, node_df)
@@ -61,11 +61,11 @@ class Jaal:
                     nodes.append(node)
             self.filtered_data['nodes'] = nodes
             graph_data = self.filtered_data
-        except: 
+        except:
             graph_data = self.data
-            print("wrong node filter query!!") 
+            print("wrong node filter query!!")
         return graph_data
-    
+
     def _callback_filter_edges(self, graph_data, filter_edges_text):
         self.filtered_data = self.data.copy()
         edges_df = pd.DataFrame(self.filtered_data['edges'])
@@ -151,8 +151,8 @@ class Jaal:
         #
         return popover_legend_children
 
-    def plot(self, debug=False, host="127.0.0.1", port="8050", directed=False):
-        """Plot the network by running the Dash server 
+    def plot(self, debug=False, host="127.0.0.1", port="8050", directed=False, vis_opts=None):
+        """Plot the network by running the Dash server
 
         Parameter
         ----------
@@ -172,7 +172,7 @@ class Jaal:
         app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
         # define layout
-        app.layout = get_app_layout(self.data, color_legends=self.get_color_popover_legend_children(), directed=directed)
+        app.layout = get_app_layout(self.data, color_legends=self.get_color_popover_legend_children(), directed=directed, vis_opts=vis_opts)
 
         # create callbacks to toggle legend popover
         @app.callback(
@@ -184,7 +184,7 @@ class Jaal:
             if n:
                 return not is_open
             return is_open
-        
+
         # create the main callbacks
         @app.callback(
             [Output('graph', 'data'), Output('color-legend-popup', 'children')],
@@ -203,15 +203,15 @@ class Jaal:
                 print("No trigger")
                 return [self.data, self.get_color_popover_legend_children()]
             else:
-                # find the id of the option which was triggered 
+                # find the id of the option which was triggered
                 input_id = ctx.triggered[0]['prop_id'].split('.')[0]
-                # perform operation incase of search graph option
+                # perform operation in case of search graph option
                 if input_id == "search_graph":
                     graph_data = self._callback_search_graph(graph_data, search_text)
-                # incase filter nodes was triggered
+                # In case filter nodes was triggered
                 elif input_id == 'filter_nodes':
                     graph_data = self._callback_filter_nodes(graph_data, filter_nodes_text)
-                # incase filter edges was triggered
+                # In case filter edges was triggered
                 elif input_id == 'filter_edges':
                     graph_data = self._callback_filter_edges(graph_data, filter_edges_text)
                 # If color node text is provided

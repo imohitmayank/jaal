@@ -97,6 +97,21 @@ By default, `Jaal` plot undirected edges. This setting can be changed by,
 ```python
 Jaal(edge_df, node_df).plot(directed=True)
 ```
+
+### Using vis.js settings
+
+We can tweak any of the `vis.js` related network visualization settings. An example is,
+
+```python
+# init Jaal and run server
+Jaal(edge_df, node_df).plot(vis_opts={'height': '600px', # change height
+                                      'interaction':{'hover': True}, # turn on-off the hover 
+                                      'physics':{'stabilization':{'iterations': 100}}}) # define the convergence iteration of network
+
+```
+
+For a complete list of settings, visit [vis.js website](https://visjs.github.io/vis-network/docs/network/).
+
 ## 👉 Common Problems
 
 ### Port related issue

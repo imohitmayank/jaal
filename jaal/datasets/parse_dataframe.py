@@ -3,6 +3,21 @@ Author: Mohit Mayank
 
 Parse network data from dataframe format into visdcc format 
 """
+
+def compute_scaling_vars_for_numerical_cols(df):
+    """Identify and scale numerical cols"""
+    # identify numerical cols
+    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    numeric_cols = df.select_dtypes(include=numerics).columns.tolist()
+    # var to hold the scaling function
+    scaling_vars = {}
+    # scale numerical cols
+    for col in numeric_cols:
+        minn, maxx = df[col].min(), df[col].max()
+        scaling_vars[col] = {'min': minn, 'max': maxx} 
+    # return
+    return scaling_vars
+
 def parse_dataframe(edge_df, node_df=None):
     """Parse the network dataframe into visdcc format
 
@@ -26,6 +41,12 @@ def parse_dataframe(edge_df, node_df=None):
     # Data post processing - convert the from and to columns in edge data as string for searching
     edge_df.loc[:, ['from', 'to']] = edge_df.loc[:, ['from', 'to']].astype(str)
 
+    # Data pot processing (scaling numerical cols in nodes and edge)
+    scaling_vars = {'node': None, 'edge': None}
+    if node_df is not None:
+        scaling_vars['node'] = compute_scaling_vars_for_numerical_cols(node_df)
+    scaling_vars['edge'] = compute_scaling_vars_for_numerical_cols(edge_df)
+    
     # create node list w.r.t. the presence of absence of node_df
     nodes = []
     if node_df is None:
@@ -41,7 +62,7 @@ def parse_dataframe(edge_df, node_df=None):
     # create edges from df
     edges = []
     for row in edge_df.to_dict(orient='records'):
-        edges.append({**row, **{'id': row['from'] + "__" + row['to'], 'color': {'color': '#97C2FC'}}})
+        edges.append({**row, **{'id': row['from'] + "__" + row['to'],  'color': {'color': '#97C2FC'}}})
     
     # return
-    return {'nodes': nodes, 'edges': edges}
+    return {'nodes': nodes, 'edges': edges}, scaling_vars

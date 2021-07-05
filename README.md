@@ -78,6 +78,9 @@ At present, the dashboard consist of following sections,
 ### 3. Coloring
 <img src="jaal/assest/jaal_color.gif" alt="dashboard"/>
 
+### 4. Size
+<img src="jaal/assest/jaal_size.gif" alt="dashboard"/>
+
 ## 👉 Extra settings
 
 ### Display edge label

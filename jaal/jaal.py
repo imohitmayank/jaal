@@ -13,7 +13,7 @@ import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 from .datasets.parse_dataframe import parse_dataframe
-from .layout import get_app_layout, get_distinct_colors, create_color_legend, DEFAULT_COLOR
+from .layout import get_app_layout, get_distinct_colors, create_color_legend, DEFAULT_COLOR, DEFAULT_NODE_SIZE, DEFAULT_EDGE_SIZE
 
 # class
 class Jaal:
@@ -30,26 +30,26 @@ class Jaal:
             The network node data stored in format of pandas dataframe
         """
         print("Parsing the data...", end="")
-        self.data = parse_dataframe(edge_df, node_df)
+        self.data, self.scaling_vars = parse_dataframe(edge_df, node_df)
         self.filtered_data = self.data.copy()
         self.node_value_color_mapping = {}
         self.edge_value_color_mapping = {}
         print("Done")
 
     def _callback_search_graph(self, graph_data, search_text):
-        """Highlight the nodes which match the search text
+        """Only show the nodes which match the search text
         """
         nodes = graph_data['nodes']
         for node in nodes:
             if search_text not in node['label'].lower():
-                node['color'] = '#f4f8fe'
+                node['hidden'] = True
             else:
-                node['color'] = DEFAULT_COLOR
+                node['hidden'] = False
         graph_data['nodes'] = nodes
         return graph_data
 
     def _callback_filter_nodes(self, graph_data, filter_nodes_text):
-        """
+        """Filter the nodes based on the Python query syntax
         """
         self.filtered_data = self.data.copy()
         node_df = pd.DataFrame(self.filtered_data['nodes'])
@@ -67,6 +67,8 @@ class Jaal:
         return graph_data
 
     def _callback_filter_edges(self, graph_data, filter_edges_text):
+        """Filter the edges based on the Python query syntax
+        """
         self.filtered_data = self.data.copy()
         edges_df = pd.DataFrame(self.filtered_data['edges'])
         try:
@@ -101,6 +103,29 @@ class Jaal:
         self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
         graph_data = self.filtered_data
         return graph_data, value_color_mapping
+    
+    def _callback_size_nodes(self, graph_data, size_nodes_value):
+
+        # color option is None, revert back all changes
+        if size_nodes_value == 'None':
+            # revert to default color
+            for node in self.data['nodes']:
+                node['size'] = DEFAULT_NODE_SIZE
+        else:
+            print("Modifying node size using ", size_nodes_value)
+            # fetch the scaling value
+            minn = self.scaling_vars['node'][size_nodes_value]['min']
+            maxx = self.scaling_vars['node'][size_nodes_value]['max']
+            # define the scaling function
+            scale_val = lambda x: 20*(x-minn)/(maxx-minn)
+            # set size after scaling
+            for node in self.data['nodes']:
+                node['size'] = node['size'] + scale_val(node[size_nodes_value])
+        # filter the data currently shown
+        filtered_nodes = [x['id'] for x in self.filtered_data['nodes']]
+        self.filtered_data['nodes'] = [x for x in self.data['nodes'] if x['id'] in filtered_nodes]
+        graph_data = self.filtered_data
+        return graph_data
 
     def _callback_color_edges(self, graph_data, color_edges_value):
         value_color_mapping = {}
@@ -121,6 +146,28 @@ class Jaal:
         self.filtered_data['edges'] = [x for x in self.data['edges'] if x['id'] in filtered_edges]
         graph_data = self.filtered_data
         return graph_data, value_color_mapping
+
+    def _callback_size_edges(self, graph_data, size_edges_value):
+        # color option is None, revert back all changes
+        if size_edges_value == 'None':
+            # revert to default color
+            for edge in self.data['edges']:
+                edge['width'] = DEFAULT_EDGE_SIZE
+        else:
+            print("Modifying edge size using ", size_edges_value)
+            # fetch the scaling value
+            minn = self.scaling_vars['edge'][size_edges_value]['min']
+            maxx = self.scaling_vars['edge'][size_edges_value]['max']
+            # define the scaling function
+            scale_val = lambda x: 20*(x-minn)/(maxx-minn)
+            # set the size after scaling
+            for edge in self.data['edges']:
+                edge['width'] = scale_val(edge[size_edges_value])
+        # filter the data currently shown
+        filtered_edges = [x['id'] for x in self.filtered_data['edges']]
+        self.filtered_data['edges'] = [x for x in self.data['edges'] if x['id'] in filtered_edges]
+        graph_data = self.filtered_data
+        return graph_data
 
     def get_color_popover_legend_children(self, node_value_color_mapping={}, edge_value_color_mapping={}):
         """Get the popover legends for node and edge based on the color setting
@@ -185,6 +232,39 @@ class Jaal:
                 return not is_open
             return is_open
 
+        # create callbacks to toggle hide/show sections - FILTER section
+        @app.callback(
+            Output("filter-show-toggle", "is_open"),
+            [Input("filter-show-toggle-button", "n_clicks")],
+            [State("filter-show-toggle", "is_open")],
+        )
+        def toggle_filter_collapse(n, is_open):
+            if n:
+                return not is_open
+            return is_open
+        
+        # create callbacks to toggle hide/show sections - COLOR section
+        @app.callback(
+            Output("color-show-toggle", "is_open"),
+            [Input("color-show-toggle-button", "n_clicks")],
+            [State("color-show-toggle", "is_open")],
+        )
+        def toggle_filter_collapse(n, is_open):
+            if n:
+                return not is_open
+            return is_open
+
+        # create callbacks to toggle hide/show sections - COLOR section
+        @app.callback(
+            Output("size-show-toggle", "is_open"),
+            [Input("size-show-toggle-button", "n_clicks")],
+            [State("size-show-toggle", "is_open")],
+        )
+        def toggle_filter_collapse(n, is_open):
+            if n:
+                return not is_open
+            return is_open
+
         # create the main callbacks
         @app.callback(
             [Output('graph', 'data'), Output('color-legend-popup', 'children')],
@@ -192,10 +272,13 @@ class Jaal:
             Input('filter_nodes', 'value'),
             Input('filter_edges', 'value'),
             Input('color_nodes', 'value'),
-            Input('color_edges', 'value')],
+            Input('color_edges', 'value'),
+            Input('size_nodes', 'value'),
+            Input('size_edges', 'value')],
             state=State('graph', 'data')
         )
-        def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, color_nodes_value, color_edges_value, graph_data):
+        def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, 
+                    color_nodes_value, color_edges_value, size_nodes_value, size_edges_value, graph_data):
             # fetch the id of option which triggered
             ctx = dash.callback_context
             # if its the first call
@@ -220,6 +303,12 @@ class Jaal:
                 # If color edge text is provided
                 if input_id == 'color_edges':
                     graph_data, self.edge_value_color_mapping = self._callback_color_edges(graph_data, color_edges_value)
+                # If size node text is provided
+                if input_id == 'size_nodes':
+                    graph_data = self._callback_size_nodes(graph_data, size_nodes_value)
+                # If size edge text is provided
+                if input_id == 'size_edges':
+                    graph_data = self._callback_size_edges(graph_data, size_edges_value)
             # create the color legend childrens
             color_popover_legend_children = self.get_color_popover_legend_children(self.node_value_color_mapping, self.edge_value_color_mapping)
             # finally return the modified data

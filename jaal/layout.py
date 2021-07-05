@@ -15,6 +15,10 @@ import dash_bootstrap_components as dbc
 
 # Constants
 #--------------
+# default node and edge size
+DEFAULT_NODE_SIZE = 7
+DEFAULT_EDGE_SIZE = 1
+
 # default node and egde color
 DEFAULT_COLOR = '#97C2FC'
 
@@ -48,6 +52,7 @@ DEFAULT_OPTIONS = {
     'height': '600px',
     'width': '100%',
     'interaction':{'hover': True},
+    # 'edges': {'scaling': {'min': 1, 'max': 5}},
     'physics':{'stabilization':{'iterations': 100}}
 }
 
@@ -105,7 +110,7 @@ search_form = dbc.FormGroup(
         # dbc.Label("Search", html_for="search_graph"),
         dbc.Input(type="search", id="search_graph", placeholder="Search node in graph..."),
         dbc.FormText(
-            "Highlight the node you are looking for.",
+            "Show the node you are looking for",
             color="secondary",
         ),
     ]
@@ -160,6 +165,36 @@ def get_select_form_layout(id, options, label, description):
                 dbc.FormText(description, color="secondary",)
             ,])
 
+def get_categorical_features(df_, unique_limit=20, blacklist_features=['shape', 'label', 'id']):
+    """Identify categorical features for edge or node data and return their names
+    Additional logics: (1) cardinality should be within `unique_limit`, (2) remove blacklist_features
+    """
+    # identify the rel cols + None
+    cat_features = ['None'] + df_.columns[(df_.dtypes == 'object') & (df_.apply(pd.Series.nunique) <= unique_limit)].tolist()
+    # remove irrelevant cols
+    try: 
+        for col in blacklist_features:
+            cat_features.remove(col)
+    except:
+        pass
+    # return
+    return cat_features
+
+def get_numerical_features(df_, unique_limit=20):
+    """Identify numerical features for edge or node data and return their names
+    """
+    # supported numerical cols
+    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    # identify numerical features
+    numeric_features = ['None'] + df_.select_dtypes(include=numerics).columns.tolist()
+    # remove blacklist cols (for nodes)
+    try:
+        numeric_features.remove('size')
+    except:
+        pass
+    # return
+    return numeric_features
+
 def get_app_layout(graph_data, color_legends=[], directed=False, vis_opts=None):
     """Create and return the layout of the app
 
@@ -168,25 +203,13 @@ def get_app_layout(graph_data, color_legends=[], directed=False, vis_opts=None):
     graph_data: dict{nodes, edges}
         network data in format of visdcc
     """
-    # Step 1: find categorical features of nodes
-    node_df = pd.DataFrame(graph_data['nodes'])
-    cat_node_features = ['None'] + node_df.columns[(node_df.dtypes == 'object') & (node_df.apply(pd.Series.nunique) <= 20)].tolist()
-    try: # remove irrelevant cols
-        cat_node_features.remove('shape')
-        cat_node_features.remove('label')
-        cat_node_features.remove('id')
-    except:
-        pass
-    # Step 2: find categorical features of edges
-    edge_df = pd.DataFrame(graph_data['edges']).drop(columns=['color'])
-    cat_edge_features = ['None'] + edge_df.columns[(edge_df.dtypes == 'object') & (edge_df.apply(pd.Series.nunique) <= 20)].tolist()
-    try: # remove irrelevant cols
-        cat_edge_features.remove('from')
-        cat_edge_features.remove('to')
-        cat_edge_features.remove('id')
-    except:
-        pass
-    # Step 3: create and return the layout
+    # Step 1-2: find categorical features of nodes and edges
+    cat_node_features = get_categorical_features(pd.DataFrame(graph_data['nodes']), 20, ['shape', 'label', 'id'])
+    cat_edge_features = get_categorical_features(pd.DataFrame(graph_data['edges']).drop(columns=['color']), 20, ['color', 'from', 'to', 'id'])
+    # Step 3-4: Get numerical features of nodes and edges
+    num_node_features = get_numerical_features(pd.DataFrame(graph_data['nodes']))
+    num_edge_features = get_numerical_features(pd.DataFrame(graph_data['edges']))
+    # Step 5: create and return the layout
     # resolve path
     this_dir, _ = os.path.split(__file__)
     image_filename = os.path.join(this_dir, "assest", "logo.png")
@@ -202,34 +225,74 @@ def get_app_layout(graph_data, color_legends=[], directed=False, vis_opts=None):
                         html.H6("Search"),
                         html.Hr(className="my-2"),
                         search_form,
+
                         # ---- filter section ----
-                        html.H6("Filter"),
-                        html.Hr(className="my-2"),
-                        filter_node_form,
-                        filter_edge_form,
+                        create_row([
+                            html.H6("Filter"),
+                            dbc.Button("Hide/Show", id="filter-show-toggle-button", outline=True, color="secondary", size="sm"), # legend
+                        ], {**fetch_flex_row_style(), 'margin-left': 0, 'margin-right':0, 'justify-content': 'space-between'}),
+                        dbc.Collapse([
+                            html.Hr(className="my-2"),
+                            filter_node_form,
+                            filter_edge_form,
+                        ], id="filter-show-toggle", is_open=False),
+                        
                         # ---- color section ----
                         create_row([
                             html.H6("Color"), # heading
-                            dbc.Button("Legends", id="color-legend-toggle", outline=True, color="secondary", size="sm"), # legend
+                            html.Div([
+                                dbc.Button("Hide/Show", id="color-show-toggle-button", outline=True, color="secondary", size="sm"), # legend
+                                dbc.Button("Legends", id="color-legend-toggle", outline=True, color="secondary", size="sm"), # legend
+                            ]),
                             # add the legends popup
                             dbc.Popover(
                                 children=color_legends,
                                 id="color-legend-popup", is_open=False, target="color-legend-toggle",
                             ),
                         ], {**fetch_flex_row_style(), 'margin-left': 0, 'margin-right':0, 'justify-content': 'space-between'}),
-                        html.Hr(className="my-2"),
-                        get_select_form_layout(
-                            id='color_nodes',
-                            options=[{'label': opt, 'value': opt} for opt in cat_node_features],
-                            label='Color nodes by',
-                            description='Select the categorical node property to color nodes by'
-                        ),
-                        get_select_form_layout(
-                            id='color_edges',
-                            options=[{'label': opt, 'value': opt} for opt in cat_edge_features],
-                            label='Color edges by',
-                            description='Select the categorical edge property to color edges by'
-                        ),
+                        dbc.Collapse([
+                            html.Hr(className="my-2"),
+                            get_select_form_layout(
+                                id='color_nodes',
+                                options=[{'label': opt, 'value': opt} for opt in cat_node_features],
+                                label='Color nodes by',
+                                description='Select the categorical node property to color nodes by'
+                            ),
+                            get_select_form_layout(
+                                id='color_edges',
+                                options=[{'label': opt, 'value': opt} for opt in cat_edge_features],
+                                label='Color edges by',
+                                description='Select the categorical edge property to color edges by'
+                            ),
+                        ], id="color-show-toggle", is_open=True),
+
+                        # ---- size section ----
+                        create_row([
+                            html.H6("Size"), # heading
+                            dbc.Button("Hide/Show", id="size-show-toggle-button", outline=True, color="secondary", size="sm"), # legend
+                            # dbc.Button("Legends", id="color-legend-toggle", outline=True, color="secondary", size="sm"), # legend
+                            # add the legends popup
+                            # dbc.Popover(
+                            #     children=color_legends,
+                            #     id="color-legend-popup", is_open=False, target="color-legend-toggle",
+                            # ),
+                        ], {**fetch_flex_row_style(), 'margin-left': 0, 'margin-right':0, 'justify-content': 'space-between'}),
+                        dbc.Collapse([
+                            html.Hr(className="my-2"),
+                            get_select_form_layout(
+                                id='size_nodes',
+                                options=[{'label': opt, 'value': opt} for opt in num_node_features],
+                                label='Size nodes by',
+                                description='Select the numerical node property to size nodes by'
+                            ),
+                            get_select_form_layout(
+                                id='size_edges',
+                                options=[{'label': opt, 'value': opt} for opt in num_edge_features],
+                                label='Size edges by',
+                                description='Select the numerical edge property to size edges by'
+                            ),
+                        ], id="size-show-toggle", is_open=True),
+
                     ], className="card", style={'padding': '5px', 'background': '#e5e5e5'}),
                 ],width=3, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
                 # graph

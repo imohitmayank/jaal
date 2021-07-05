@@ -62,9 +62,10 @@ After running the plot, the console will prompt the default localhost address (`
 
 At present, the dashboard consist of following sections,
 1. **Setting panel:** here we can play with the graph data, it further contain following sections:
-    - **Search:** can be used to highlight a node in graph
+    - **Search:** can be used to find a node in graph
     - **Filter:** supports pandas query language and can be used to filter the graph data based on nodes or edge features.
     - **Color:** can be used to color nodes or edges based on their categorical features. Note, currently only features with at max 20 cardinality are supported. 
+    - **Size:** can be used to size nodes or edges based on their numerical features.
 2. **Graph:** the network graph in all its glory :)
 
 ## 👉 Examples

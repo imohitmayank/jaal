@@ -198,22 +198,21 @@ class Jaal:
         #
         return popover_legend_children
 
-    def plot(self, debug=False, host="127.0.0.1", port="8050", directed=False, vis_opts=None):
-        """Plot the network by running the Dash server
+    def create(self, directed=False, vis_opts=None):
+        """Create the Jaal app and return it
 
         Parameter
         ----------
-            debug (boolean)
-                run the debug instance of Dash?
-
-            host: string
-                ip address on which to run the dash server (default: 127.0.0.1)
-
-            port: string
-                port on which to expose the dash server (default: 8050)
-
             directed: boolean
                 process the graph as directed graph?
+
+            vis_opts: dict
+                the visual options to be passed to the dash server (default: None)
+
+        Returns
+        -------
+            app: dash.Dash
+                the Jaal app
         """
         # create the app
         app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -313,5 +312,30 @@ class Jaal:
             color_popover_legend_children = self.get_color_popover_legend_children(self.node_value_color_mapping, self.edge_value_color_mapping)
             # finally return the modified data
             return [graph_data, color_popover_legend_children]
+        # return server
+        return app
+
+    def plot(self, debug=False, host="127.0.0.1", port="8050", directed=False, vis_opts=None):
+        """Plot the Jaal by first creating the app and then hosting it on default server
+
+        Parameter
+        ----------
+            debug (boolean)
+                run the debug instance of Dash?
+
+            host: string
+                ip address on which to run the dash server (default: 127.0.0.1)
+
+            port: string
+                port on which to expose the dash server (default: 8050)
+
+            directed (boolean):
+                whether the graph is directed or not (default: False)
+
+            vis_opts: dict
+                the visual options to be passed to the dash server (default: None)
+        """
+        # call the create_graph function
+        app = self.create(directed=directed, vis_opts=vis_opts)
         # run the server
         app.run_server(debug=debug, host=host, port=port)

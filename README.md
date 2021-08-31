@@ -116,6 +116,29 @@ Jaal(edge_df, node_df).plot(vis_opts={'height': '600px', # change height
 
 For a complete list of settings, visit [vis.js website](https://visjs.github.io/vis-network/docs/network/).
 
+### Using gunicorn
+
+We can host Jaal on production level HTTP server using `gunicorn` by first creating the app file (`jaal_app.py`),
+
+```python
+# import
+from jaal import Jaal
+from jaal.datasets import load_got
+# load the data
+edge_df, node_df = load_got()
+# create the app and server
+app = Jaal(edge_df, node_df).create()
+server = app.server
+```
+
+then from the command line, start the server by,
+
+```
+gunicorn jaal_app:server
+```
+
+Note, `Jaal.create()` takes `directed` and `vis_opts` as arguments. (same as `Jaal.plot()` except the `host` and `port` arguments)
+
 ## 👉 Common Problems
 
 ### Port related issue

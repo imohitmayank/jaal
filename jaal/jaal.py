@@ -7,8 +7,9 @@ Main class for Jaal network visualization dashboard
 import dash
 import visdcc
 import pandas as pd
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
+# import dash_core_components as dcc
+# import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
@@ -274,7 +275,7 @@ class Jaal:
             Input('color_edges', 'value'),
             Input('size_nodes', 'value'),
             Input('size_edges', 'value')],
-            state=State('graph', 'data')
+            [State('graph', 'data')]
         )
         def setting_pane_callback(search_text, filter_nodes_text, filter_edges_text, 
                     color_nodes_value, color_edges_value, size_nodes_value, size_edges_value, graph_data):

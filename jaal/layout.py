@@ -205,15 +205,23 @@ def get_select_form_layout(id, options, label, description):
     )
 
 
+def is_hashable(seq):
+    # Returns true for each column whose first item is hashable
+    return pd.api.types.is_hashable(seq[0])
+
+
 def get_categorical_features(
     df_, unique_limit=20, blacklist_features=["shape", "label", "id"]
 ):
     """Identify categorical features for edge or node data and return their names
     Additional logics: (1) cardinality should be within `unique_limit`, (2) remove blacklist_features
     """
+    hash_col = df_.columns[df_.apply(is_hashable)]
+    hash_df = df_[hash_col]
     # identify the rel cols + None
-    cat_features = ["None"] + df_.columns[
-        (df_.dtypes == "object") & (df_.apply(pd.Series.nunique) <= unique_limit)
+    cat_features = ["None"] + hash_df.columns[
+        (hash_df.dtypes == "object")
+        & (hash_df.apply(pd.Series.nunique) <= unique_limit)
     ].tolist()
     # remove irrelevant cols
     try:

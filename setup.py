@@ -48,5 +48,5 @@ setuptools.setup(
                       'pandas>=1.2.1', 
                       'dash_core_components>=1.15.0', 
                       'dash_html_components>=1.1.2', 
-                      'dash_bootstrap_components>=0.11.1'],
+                      'dash_bootstrap_components<1'],
 )

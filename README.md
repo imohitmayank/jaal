@@ -93,6 +93,11 @@ For example, using the GoT dataset, by adding the following line before the `Jaa
 # add edge labels
 edge_df.loc[:, 'label'] = edge_df.loc[:, 'weight'].astype(str)
 ```
+### Display image in node
+
+Currently it is possible to show image within node (with circular shape). For this, we need to put `node_image_url` column in the `node_df` with URLs for each node.
+
+<img src="jaal/assest/jaal_node_image.png" width="300" height="200" alt="dashboard"/>
 
 ### Directed edges
 

@@ -55,10 +55,17 @@ def parse_dataframe(edge_df, node_df=None):
     else:
         # convert the node id column to string
         node_df.loc[:, 'id'] = node_df.loc[:, 'id'].astype(str)
+        # see if node imge url is present or not
+        node_image_url_flag = 'node_image_url' in node_df.columns
         # create the node data
         for node in node_df.to_dict(orient='records'):
-            nodes.append({**node, **{'label': node['id'], 'shape': 'dot', 'size': 7}})
-    
+            if not node_image_url_flag:
+                nodes.append({**node, **{'label': node['id'], 'shape': 'dot', 'size': 7}})
+            else:
+                nodes.append({**node, **{'label': node['id'], 'shape': 'circularImage',
+                                'image': node['node_image_url'], 
+                                'size': 20}})
+
     # create edges from df
     edges = []
     for row in edge_df.to_dict(orient='records'):

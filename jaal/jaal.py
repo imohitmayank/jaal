@@ -42,7 +42,7 @@ class Jaal:
         """
         nodes = graph_data['nodes']
         for node in nodes:
-            if search_text not in node['label'].lower():
+            if search_text.lower() not in node['label'].lower():
                 node['hidden'] = True
             else:
                 node['hidden'] = False
@@ -216,7 +216,7 @@ class Jaal:
                 the Jaal app
         """
         # create the app
-        app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+        app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
         # define layout
         app.layout = get_app_layout(self.data, color_legends=self.get_color_popover_legend_children(), directed=directed, vis_opts=vis_opts)

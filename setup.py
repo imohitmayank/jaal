@@ -41,7 +41,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    package_data={'': ['datasets/*', 'assest/logo.png', 'datasets/got/*']},
+    package_data={'': ['datasets/*', 'assets/logo.png', 'datasets/got/*']},
     include_package_data=True,
     install_requires=['dash>=1.19.0', 
                       'visdcc>=0.0.40', 

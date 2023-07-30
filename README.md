@@ -1,4 +1,4 @@
-<img src="jaal/assest/logo.png" alt="jaal logo"/>
+<img src="jaal/assets/logo.png" alt="jaal logo"/>
 
 ![PyPI](https://img.shields.io/pypi/v/jaal) [![PyPI dm](https://img.shields.io/pypi/dm/jaal.svg)](https://img.shields.io/pypi/jaal) [![Join the chat at https://gitter.im/imm-jaal/community](https://badges.gitter.im/imm-jaal/community.svg)](https://gitter.im/imm-jaal/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) ![GitHub](https://img.shields.io/github/license/imohitmayank/jaal) ![GitHub Repo stars](https://img.shields.io/github/stars/imohitmayank/jaal?style=social)
 
@@ -56,7 +56,7 @@ Note, edge_df is mandatory and node_df is optional. Also we can include addition
 
 After running the plot, the console will prompt the default localhost address (`127.0.0.1:8050`) where Jaal is running. Access it to see the following dashboard,
 
-<img src="jaal/assest/dashboard.png" alt="dashboard"/>
+<img src="jaal/assets/dashboard.png" alt="dashboard"/>
 
 ## 👉 Features
 
@@ -71,16 +71,16 @@ At present, the dashboard consist of following sections,
 ## 👉 Examples
 
 ### 1. Searching
-<img src="jaal/assest/jaal_search.gif" alt="dashboard"/>
+<img src="jaal/assets/jaal_search.gif" alt="dashboard"/>
 
 ### 2. Filtering
-<img src="jaal/assest/jaal_filter.gif" alt="dashboard"/>
+<img src="jaal/assets/jaal_filter.gif" alt="dashboard"/>
 
 ### 3. Coloring
-<img src="jaal/assest/jaal_color.gif" alt="dashboard"/>
+<img src="jaal/assets/jaal_color.gif" alt="dashboard"/>
 
 ### 4. Size
-<img src="jaal/assest/jaal_size.gif" alt="dashboard"/>
+<img src="jaal/assets/jaal_size.gif" alt="dashboard"/>
 
 ## 👉 Extra settings
 
@@ -97,7 +97,7 @@ edge_df.loc[:, 'label'] = edge_df.loc[:, 'weight'].astype(str)
 
 Currently it is possible to show image within node (with circular shape). For this, we need to put `node_image_url` column in the `node_df` with URLs for each node.
 
-<img src="jaal/assest/jaal_node_image.png" width="300" height="200" alt="dashboard"/>
+<img src="jaal/assets/jaal_node_image.png" width="300" height="200" alt="dashboard"/>
 
 ### Directed edges
 

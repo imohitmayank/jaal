@@ -213,7 +213,7 @@ def get_app_layout(graph_data, color_legends=[], directed=False, vis_opts=None):
     # Step 5: create and return the layout
     # resolve path
     this_dir, _ = os.path.split(__file__)
-    image_filename = os.path.join(this_dir, "assest", "logo.png")
+    image_filename = os.path.join(this_dir, "assets", "logo.png")
     encoded_image = base64.b64encode(open(image_filename, 'rb').read())
     return html.Div([
             # create_row(html.H2(children="Jaal")), # Title

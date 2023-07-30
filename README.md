@@ -107,6 +107,10 @@ By default, `Jaal` plot undirected edges. This setting can be changed by,
 Jaal(edge_df, node_df).plot(directed=True)
 ```
 
+### Showing Tooltip
+
+By default, `nodeid` is shown as tooltip. To overwrite this, include a `title` column with the respective data.
+
 ### Using vis.js settings
 
 We can tweak any of the `vis.js` related network visualization settings. An example is,

@@ -57,14 +57,17 @@ def parse_dataframe(edge_df, node_df=None):
         node_df.loc[:, 'id'] = node_df.loc[:, 'id'].astype(str)
         # remove blanks cols
         node_df = node_df.dropna(axis=1)
+        # if title is not present, make it same as label
+        if 'title' not in node_df.columns:
+            node_df['title'] = node_df['id']
         # see if node imge url is present or not
         node_image_url_flag = 'node_image_url' in node_df.columns
         # create the node data
         for node in node_df.to_dict(orient='records'):
             if not node_image_url_flag:
-                nodes.append({**node, **{'label': node['id'], 'title': node['id'], 'shape': 'dot', 'size': 7}})
+                nodes.append({**node, **{'label': node['id'], 'shape': 'dot', 'size': 7}})
             else:
-                nodes.append({**node, **{'label': node['id'], 'title': node['id'], 'shape': 'circularImage',
+                nodes.append({**node, **{'label': node['id'], 'shape': 'circularImage',
                                 'image': node['node_image_url'], 
                                 'size': 20}})
 

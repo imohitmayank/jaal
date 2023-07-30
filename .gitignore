@@ -1,6 +1,11 @@
 # testing call file
 # jaal_call.py
 
+# mac dev files
+.DS_Store
+jaal/.DS_Store
+jaal/datasets/.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

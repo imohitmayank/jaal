@@ -65,9 +65,9 @@ def parse_dataframe(edge_df, node_df=None):
         # create the node data
         for node in node_df.to_dict(orient='records'):
             if not node_image_url_flag:
-                nodes.append({**node, **{'label': node['id'], 'shape': 'dot', 'size': 7}})
+                nodes.append({**node, **{'label': node['title'], 'shape': 'dot', 'size': 7}})
             else:
-                nodes.append({**node, **{'label': node['id'], 'shape': 'circularImage',
+                nodes.append({**node, **{'label': node['title'], 'shape': 'circularImage',
                                 'image': node['node_image_url'], 
                                 'size': 20}})
 

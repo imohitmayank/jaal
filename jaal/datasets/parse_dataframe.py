@@ -39,7 +39,7 @@ def parse_dataframe(edge_df, node_df=None):
             raise Exception("Node dataframe missing 'id' column.")
 
     # Data post processing - convert the from and to columns in edge data as string for searching
-    edge_df.loc[:, ['from', 'to']] = edge_df.loc[:, ['from', 'to']].astype(str)
+    edge_df = edge_df.astype({'from': str, 'to': str})
 
     # Data pot processing (scaling numerical cols in nodes and edge)
     scaling_vars = {'node': None, 'edge': None}
@@ -54,7 +54,7 @@ def parse_dataframe(edge_df, node_df=None):
         nodes = [{'id': node_name, 'label': node_name, 'title': node_name, 'shape': 'dot', 'size': 7} for node_name in node_list]
     else:
         # convert the node id column to string
-        node_df.loc[:, 'id'] = node_df.loc[:, 'id'].astype(str)
+        node_df = node_df.astype({'id': str})
         # remove blanks cols
         node_df = node_df.dropna(axis=1)
         # if title is not present, make it same as label

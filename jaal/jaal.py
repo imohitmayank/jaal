@@ -339,4 +339,4 @@ class Jaal:
         # call the create_graph function
         app = self.create(directed=directed, vis_opts=vis_opts)
         # run the server
-        app.run_server(debug=debug, host=host, port=port)
+        app.run(debug=debug, host=host, port=port)
